@@ -17,6 +17,18 @@ const PROJECT_ROOT_MARKER_DIR_NAME = ".git"
 // Configuration file name
 const CONFIG_FILE_NAME = "course_sync.config.json"
 
-// Application hidden directory name. This directory is created inside the project root directory.
-// It contains temporary files used by Course Sync. It should be ignored by version control systems.
-const HIDDEN_DIR_NAME = ".csync"
+// Application directory name. This directory is created inside the project root directory and is
+// hidden. It contains application-specific data, such as assignments.
+const APP_DIR_NAME = ".csync"
+
+// Documentation directory name.
+const DOCS_DIR_NAME = "docs"
+
+// Source code source directory name.
+const SRC_DIR_NAME = "src"
+
+// Prototype directory name. This directory is under the code source directory.
+const PROTOTYPE_DIR_NAME = "[prototype]"
+
+// Assignments file name inside the application directory.
+const ASSIGNMENTS_FILE_NAME = "assignments.json"

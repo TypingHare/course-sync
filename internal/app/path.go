@@ -5,9 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
-
-	"github.com/iancoleman/strcase"
 )
 
 // Error returned when the project directory cannot be found.
@@ -75,6 +72,7 @@ func FindProjectDirPath(startDir string) (string, error) {
 	)
 }
 
+// GetProjectDirPath returns the cached project directory path, or finds it if not cached.
 func GetProjectDirPath() (string, error) {
 	if projectDirCache != "" {
 		return projectDirCache, nil
@@ -89,39 +87,42 @@ func GetProjectDirPath() (string, error) {
 	return projectDirCache, nil
 }
 
+// GetDocsDirPath returns the path to the documentation directory within the project.
 func GetDocsDirPath() (string, error) {
-	projectDir, err := GetProjectDirPath()
+	projectDirPath, err := GetProjectDirPath()
 	if err != nil {
 		return "", err
 	}
 
-	return filepath.Join(projectDir, "docs"), nil
+	return filepath.Join(projectDirPath, DOCS_DIR_NAME), nil
 }
 
+// GetDocsDirPath returns the path to the source code directory within the project.
 func GetSrcDirPath() (string, error) {
-	projectDir, err := GetProjectDirPath()
+	projectDirPath, err := GetProjectDirPath()
 	if err != nil {
 		return "", err
 	}
 
-	return filepath.Join(projectDir, "src"), nil
+	return filepath.Join(projectDirPath, SRC_DIR_NAME), nil
 }
 
+// GetPrototypeDirPath returns the path to the prototype directory within the project.
 func GetPrototypeDirPath() (string, error) {
-	projectDir, err := GetProjectDirPath()
+	srcDirPath, err := GetSrcDirPath()
 	if err != nil {
 		return "", err
 	}
 
-	return filepath.Join(projectDir, "src", "[prototype]"), nil
+	return filepath.Join(srcDirPath, PROTOTYPE_DIR_NAME), nil
 }
 
-func GetHomeDirPath(gitUsername string) (string, error) {
-	projectDir, err := GetProjectDirPath()
+// GetAppDirPath returns the path to the application directory within the project.
+func GetAppDirPath() (string, error) {
+	projectDirPath, err := GetProjectDirPath()
 	if err != nil {
 		return "", err
 	}
 
-	dirName := strings.ReplaceAll(strcase.ToSnake(gitUsername), "_", "-")
-	return filepath.Join(projectDir, "src", dirName), nil
+	return filepath.Join(projectDirPath, APP_DIR_NAME), nil
 }

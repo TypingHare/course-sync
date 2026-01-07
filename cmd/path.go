@@ -12,6 +12,7 @@ var (
 	shouldDisplaySrcPath       bool
 	shouldDisplayPrototypePath bool
 	shouldDisplayUserPath      bool
+	shouldDisplayAppPath       bool
 )
 
 var pathCmd = &cobra.Command{
@@ -50,17 +51,19 @@ var pathCmd = &cobra.Command{
 			}
 			cmd.Println(prototypeDirPath)
 		} else if shouldDisplayUserPath {
-			gitUsername, err := feature.GetGitUserName(quiet, verbose)
-			if err != nil || gitUsername == "" {
-				cmd.Println("Could not determine Git username for home path.")
-			} else {
-				homeDirPath, err := app.GetHomeDirPath(gitUsername)
-				if err != nil {
-					cmd.Println("Error retrieving user home path:", err)
-					return
-				}
-				cmd.Println(homeDirPath)
+			userDirPath, err := feature.GetUserDirPath()
+			if err != nil {
+				cmd.Println("Error retrieving user path:", err)
+				return
 			}
+			cmd.Println(userDirPath)
+		} else if shouldDisplayAppPath {
+			appDirPath, err := app.GetAppDirPath()
+			if err != nil {
+				cmd.Println("Error retrieving app path:", err)
+				return
+			}
+			cmd.Println(appDirPath)
 		} else {
 			cmd.Println("Please specify a flag to display a specific path.")
 		}
@@ -68,8 +71,6 @@ var pathCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(pathCmd)
-
 	pathCmd.PersistentFlags().BoolVarP(
 		&shouldDisplayProjectPath,
 		"project-root",
@@ -108,5 +109,13 @@ func init() {
 		"u",
 		false,
 		"Display the Course Sync user directory path.",
+	)
+
+	pathCmd.PersistentFlags().BoolVarP(
+		&shouldDisplayAppPath,
+		"app",
+		"a",
+		false,
+		"Display the Course Sync application directory path.",
 	)
 }

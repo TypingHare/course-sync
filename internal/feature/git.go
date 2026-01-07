@@ -3,20 +3,22 @@ package feature
 import (
 	"strings"
 
+	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/TypingHare/course-sync/internal/execx"
 )
 
-func GetGitUserName(quiet bool, verbose bool) (string, error) {
+// GetGitUserName retrieves the Git user name from the Git configuration.
+func GetGitUserName() (string, error) {
 	commandTask := execx.CommandTask{
 		Command:        "git",
 		Args:           []string{"config", "--get", "user.name"},
 		OngoingMessage: "Retrieving Git user name...",
 		DoneMessage:    "Retrieved Git user name.",
 		ErrorMessage:   "Failed to retrieve Git user name.",
-		Quiet:          quiet,
-		PrintCommand:   verbose,
-		PrintStdout:    verbose,
-		PrintStderr:    verbose,
+		Quiet:          app.Quiet,
+		PrintCommand:   app.Verbose,
+		PrintStdout:    app.Verbose,
+		PrintStderr:    app.Verbose,
 	}
 
 	err := commandTask.Start()
@@ -27,35 +29,51 @@ func GetGitUserName(quiet bool, verbose bool) (string, error) {
 	return strings.TrimSpace(commandTask.Stdout), nil
 }
 
+func GitAdd(filePath string) error {
+	commandTask := execx.CommandTask{
+		Command:        "git",
+		Args:           []string{"add", filePath},
+		OngoingMessage: "Adding file to Git staging area...",
+		DoneMessage:    "File added to Git staging area.",
+		ErrorMessage:   "Failed to add file to Git staging area.",
+		Quiet:          app.Quiet,
+		PrintCommand:   app.Verbose,
+		PrintStdout:    app.Verbose,
+		PrintStderr:    app.Verbose,
+	}
+
+	return commandTask.Start()
+}
+
 // Pull pulls the latest changes from the remote Git repository.
-func Pull(quiet bool, verbose bool) error {
+func Pull() error {
 	commandTask := execx.CommandTask{
 		Command:        "git",
 		Args:           []string{"pull"},
 		OngoingMessage: "Pulling changes from remote repository...",
 		DoneMessage:    "Pulled changes from remote repository.",
 		ErrorMessage:   "Failed to pull changes from remote repository.",
-		Quiet:          quiet,
-		PrintCommand:   verbose,
-		PrintStdout:    verbose,
-		PrintStderr:    verbose,
+		Quiet:          app.Quiet,
+		PrintCommand:   app.Verbose,
+		PrintStdout:    app.Verbose,
+		PrintStderr:    app.Verbose,
 	}
 
 	return commandTask.Start()
 }
 
 // Push pushes the local changes to the remote Git repository.
-func Push(quiet bool, verbose bool) error {
+func Push() error {
 	commandTask := execx.CommandTask{
 		Command:        "git",
 		Args:           []string{"push"},
 		OngoingMessage: "Pushing changes to remote repository...",
 		DoneMessage:    "Pushed changes to remote repository.",
 		ErrorMessage:   "Failed to push changes to remote repository.",
-		Quiet:          quiet,
-		PrintCommand:   verbose,
-		PrintStdout:    verbose,
-		PrintStderr:    verbose,
+		Quiet:          app.Quiet,
+		PrintCommand:   app.Verbose,
+		PrintStdout:    app.Verbose,
+		PrintStderr:    app.Verbose,
 	}
 
 	return commandTask.Start()

@@ -3,13 +3,9 @@ package cmd
 import (
 	"os"
 
+	"github.com/TypingHare/course-sync/cmd/assignment"
 	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/spf13/cobra"
-)
-
-var (
-	verbose bool
-	quiet   bool
 )
 
 var rootCmd = &cobra.Command{
@@ -29,6 +25,16 @@ func Execute() {
 
 func init() {
 	rootCmd.SetVersionTemplate("{{.Version}}\n")
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output.")
-	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "Suppress non-error output.")
+	rootCmd.PersistentFlags().
+		BoolVarP(&app.Verbose, "verbose", "v", false, "Enable verbose output.")
+	rootCmd.PersistentFlags().
+		BoolVarP(&app.Quiet, "quiet", "q", false, "Suppress non-error output.")
+
+	rootCmd.AddCommand(
+		pathCmd,
+		pullCmd,
+		pushCmd,
+		syncCmd,
+		assignment.Command(),
+	)
 }

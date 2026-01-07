@@ -4,3 +4,6 @@
 # build output
 /build
 /bin/
+
+# Test files
+.csync
