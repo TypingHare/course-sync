@@ -14,6 +14,7 @@ type CommandTask struct {
 	OngoingMessage string   // Message to display while the command is running.
 	DoneMessage    string   // Message to display when the command completes successfully.
 	ErrorMessage   string   // Message to display if the command fails.
+	Quiet          bool     // Whether to suppress output messages.
 	PrintCommand   bool     // Whether to print the external command.
 	PrintStdout    bool     // Whether to print the standard output of the command.
 	PrintStderr    bool     // Whether to print the standard error of the command.
@@ -36,29 +37,30 @@ func (commandTask *CommandTask) Start() error {
 		errorMessage += appendedCommandStr
 	}
 
-	spinner := ui.NewSpinner(ui.MakeOngoing(ongoingMessage))
+	spinner := ui.NewSpinner(ui.MakeOngoing(ongoingMessage), commandTask.Quiet)
 	spinner.Start()
 
 	exitCode, stdout, stderr, err := RunCommand(commandTask.Command, commandTask.Args...)
+	commandTask.ExitCode = exitCode
+	commandTask.Stdout = stdout
+	commandTask.Stderr = stderr
 
 	spinner.Stop()
 	if err != nil {
 		fmt.Println(ui.MarkError(ui.MakeDone(errorMessage)))
 	} else {
-		fmt.Println(ui.MarkSuccess(ui.MakeDone(doneMessage)))
+		if !commandTask.Quiet {
+			fmt.Println(ui.MarkSuccess(ui.MakeDone(doneMessage)))
+		}
 	}
 
-	if commandTask.PrintStdout {
+	if commandTask.PrintStdout && !commandTask.Quiet {
 		PrintExternalCommandStdout(stdout, strings.Repeat(" ", 3))
 	}
 
 	if commandTask.PrintStderr {
 		PrintExternalCommandStderr(stderr, strings.Repeat(" ", 3))
 	}
-
-	commandTask.ExitCode = exitCode
-	commandTask.Stdout = stdout
-	commandTask.Stderr = stderr
 
 	return err
 }

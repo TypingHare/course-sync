@@ -2,10 +2,17 @@ package cmd
 
 import (
 	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/TypingHare/course-sync/internal/feature"
 	"github.com/spf13/cobra"
 )
 
-var shouldShowProjectPath bool
+var (
+	shouldDisplayProjectPath   bool
+	shouldDisplayDocsPath      bool
+	shouldDisplaySrcPath       bool
+	shouldDisplayPrototypePath bool
+	shouldDisplayUserPath      bool
+)
 
 var pathCmd = &cobra.Command{
 	Use:   "path",
@@ -13,13 +20,47 @@ var pathCmd = &cobra.Command{
 	Long:  ``,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		if shouldShowProjectPath {
-			projectPath, err := app.FindProjectDir("")
+		if shouldDisplayProjectPath {
+			projectDirPath, err := app.GetProjectDirPath()
 			if err != nil {
-				cmd.PrintErrln("Error retrieving project path:", err)
+				cmd.Println("Error retrieving project path:", err)
 				return
 			}
-			cmd.Println(projectPath)
+
+			cmd.Println(projectDirPath)
+		} else if shouldDisplayDocsPath {
+			docsDirPath, err := app.GetDocsDirPath()
+			if err != nil {
+				cmd.Println("Error retrieving docs path:", err)
+				return
+			}
+			cmd.Println(docsDirPath)
+		} else if shouldDisplaySrcPath {
+			srcDirPath, err := app.GetSrcDirPath()
+			if err != nil {
+				cmd.Println("Error retrieving src path:", err)
+				return
+			}
+			cmd.Println(srcDirPath)
+		} else if shouldDisplayPrototypePath {
+			prototypeDirPath, err := app.GetPrototypeDirPath()
+			if err != nil {
+				cmd.Println("Error retrieving prototype path:", err)
+				return
+			}
+			cmd.Println(prototypeDirPath)
+		} else if shouldDisplayUserPath {
+			gitUsername, err := feature.GetGitUserName(quiet, verbose)
+			if err != nil || gitUsername == "" {
+				cmd.Println("Could not determine Git username for home path.")
+			} else {
+				homeDirPath, err := app.GetHomeDirPath(gitUsername)
+				if err != nil {
+					cmd.Println("Error retrieving user home path:", err)
+					return
+				}
+				cmd.Println(homeDirPath)
+			}
 		} else {
 			cmd.Println("Please specify a flag to display a specific path.")
 		}
@@ -28,11 +69,44 @@ var pathCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(pathCmd)
+
 	pathCmd.PersistentFlags().BoolVarP(
-		&shouldShowProjectPath,
-		"project",
+		&shouldDisplayProjectPath,
+		"project-root",
+		"r",
+		false,
+		"Display the Course Sync project root directory path.",
+	)
+
+	pathCmd.PersistentFlags().BoolVarP(
+		&shouldDisplayDocsPath,
+		"docs",
+		"d",
+		false,
+		"Display the Course Sync documentation directory path.",
+	)
+
+	pathCmd.PersistentFlags().BoolVarP(
+		&shouldDisplaySrcPath,
+		"src",
+		"s",
+		false,
+		"Display the Course Sync source code directory path.",
+	)
+
+	pathCmd.PersistentFlags().BoolVarP(
+		&shouldDisplayPrototypePath,
+		"prototype",
 		"p",
 		false,
-		"Show the Course Sync project directory path.",
+		"Display the Course Sync prototype directory path.",
+	)
+
+	pathCmd.PersistentFlags().BoolVarP(
+		&shouldDisplayUserPath,
+		"user",
+		"u",
+		false,
+		"Display the Course Sync user directory path.",
 	)
 }

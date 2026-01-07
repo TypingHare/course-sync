@@ -11,7 +11,7 @@ var pushCmd = &cobra.Command{
 	Long:  ``,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		feature.Push(verbose)
+		feature.Push(quiet, verbose)
 	},
 }
 

@@ -5,14 +5,21 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
+
+	"github.com/iancoleman/strcase"
 )
 
 // Error returned when the project directory cannot be found.
 var ErrProjectDirNotFound = errors.New("project directory not found")
 
-// FindProjectDir walks upward from startDir (or cwd if empty) looking for the project root marker
-// directory. It returns the directory containing the project root marker.
-func FindProjectDir(startDir string) (string, error) {
+// Name of the directory that marks the project root. Since Course Sync is a CLI tool, usually the
+// project root directory doesn't change in a lifecycle.
+var projectDirCache string
+
+// FindProjectDirPath walks upward from startDir (or cwd if empty) looking for the project root
+// marker directory. It returns the path to the directory containing the project root marker.
+func FindProjectDirPath(startDir string) (string, error) {
 	var err error
 	originalStart := startDir
 
@@ -66,4 +73,55 @@ func FindProjectDir(startDir string) (string, error) {
 		PROJECT_ROOT_MARKER_DIR_NAME,
 		originalStart,
 	)
+}
+
+func GetProjectDirPath() (string, error) {
+	if projectDirCache != "" {
+		return projectDirCache, nil
+	}
+
+	projectDir, err := FindProjectDirPath("")
+	if err != nil {
+		return "", err
+	}
+
+	projectDirCache = projectDir
+	return projectDirCache, nil
+}
+
+func GetDocsDirPath() (string, error) {
+	projectDir, err := GetProjectDirPath()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(projectDir, "docs"), nil
+}
+
+func GetSrcDirPath() (string, error) {
+	projectDir, err := GetProjectDirPath()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(projectDir, "src"), nil
+}
+
+func GetPrototypeDirPath() (string, error) {
+	projectDir, err := GetProjectDirPath()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(projectDir, "src", "[prototype]"), nil
+}
+
+func GetHomeDirPath(gitUsername string) (string, error) {
+	projectDir, err := GetProjectDirPath()
+	if err != nil {
+		return "", err
+	}
+
+	dirName := strings.ReplaceAll(strcase.ToSnake(gitUsername), "_", "-")
+	return filepath.Join(projectDir, "src", dirName), nil
 }

@@ -21,6 +21,7 @@ import (
 // TTY (e.g. when output is redirected or in CI).
 type Spinner struct {
 	tty      bool          // Whether stdout is a terminal (TTY)
+	quiet    bool          // Whether to suppress output
 	message  string        // Static message shown next to the spinner
 	numLines int           // Number of lines the message occupies
 	frames   []rune        // Animation frames (an array of Unicode characters)
@@ -31,9 +32,10 @@ type Spinner struct {
 }
 
 // NewSpinner creates a new Spinner with the given message.
-func NewSpinner(message string) *Spinner {
+func NewSpinner(message string, quiet bool) *Spinner {
 	return &Spinner{
 		tty:      term.IsTerminal(int(os.Stdout.Fd())),
+		quiet:    quiet,
 		message:  message,
 		numLines: strings.Count(message, "\n") + 1,
 		frames:   []rune{'⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'},
@@ -56,6 +58,10 @@ func (spinner *Spinner) ClearMessage() {
 }
 
 func (spinner *Spinner) Start() {
+	if spinner.quiet {
+		return
+	}
+
 	if !spinner.tty {
 		fmt.Println(spinner.message + "...")
 		close(spinner.doneChan)
@@ -91,6 +97,10 @@ func (spinner *Spinner) Start() {
 // Stop stops the spinner animation and clears the spinner message from the terminal. If the spinner
 // is not running, Stop is a no-op.
 func (spinner *Spinner) Stop() {
+	if spinner.quiet {
+		return
+	}
+
 	spinner.mutex.Lock()
 	defer spinner.mutex.Unlock()
 
