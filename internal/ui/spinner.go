@@ -46,11 +46,13 @@ func NewSpinner(message string) *Spinner {
 // ClearMessage clears the spinner message from the terminal. It also moves the cursor up for
 // multi-line messages.
 func (spinner *Spinner) ClearMessage() {
-	for j := 0; j < spinner.numLines; j++ {
-		fmt.Print(ansi.EraseLine(2))
-		fmt.Print(ansi.CursorUp(1))
+	for i := 0; i < spinner.numLines; i++ {
+		fmt.Print("\r", ansi.EraseLine(2))
+		if i < spinner.numLines-1 {
+			fmt.Print(ansi.CursorUp(1))
+		}
 	}
-	fmt.Print(ansi.EraseLine(2))
+	fmt.Print("\r")
 }
 
 func (spinner *Spinner) Start() {
@@ -76,7 +78,7 @@ func (spinner *Spinner) Start() {
 
 				// Print the spinner frame and message.
 				frame := spinner.frames[i%num_frames]
-				fmt.Fprintf(os.Stdout, "\r\033[2K%c  %s]", frame, spinner.message)
+				fmt.Fprintf(os.Stdout, "\r\033[2K%c  %s", frame, spinner.message)
 				i++
 
 				// Wait before the next frame.

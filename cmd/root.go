@@ -7,21 +7,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCommand = &cobra.Command{
+var verbose bool
+
+var rootCmd = &cobra.Command{
 	Use:   app.EXECUTABLE_NAME,
 	Short: "Course Sync helps students and teachers synchronize course materials.",
-	Long: `Course Sync is a Git-based CLI tool that helps students and teachers synchronize
-course materials between local machines and remote repositories.`,
+	Long: `Course Sync is a Git-based CLI tool that helps students and teachers synchronize course
+materials between local machines and remote repositories.`,
 	Version: app.VERSION,
 }
 
 func Execute() {
-	err := rootCommand.Execute()
+	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
 func init() {
-	rootCommand.SetVersionTemplate("{{.Version}}\n")
+	rootCmd.SetVersionTemplate("{{.Version}}\n")
+	rootCmd.PersistentFlags().BoolVarP(
+		&verbose,
+		"verbose",
+		"v",
+		false,
+		"Enable verbose output.",
+	)
 }

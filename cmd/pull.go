@@ -5,15 +5,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var pullCommand = &cobra.Command{
+var pullCmd = &cobra.Command{
 	Use:   "pull",
 	Short: "Pull changes from remote repository.",
 	Long:  ``,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return feature.Pull()
+
+	Run: func(cmd *cobra.Command, args []string) {
+		feature.Pull(verbose)
 	},
 }
 
 func init() {
-	rootCommand.AddCommand(pullCommand)
+	rootCmd.AddCommand(pullCmd)
 }
