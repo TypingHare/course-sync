@@ -1,6 +1,30 @@
 package feature
 
-import "github.com/TypingHare/course-sync/internal/execx"
+import (
+	"strings"
+
+	"github.com/TypingHare/course-sync/internal/execx"
+)
+
+func GetGitUserName(verbose bool) (string, error) {
+	commandTask := execx.CommandTask{
+		Command:        "git",
+		Args:           []string{"pull"},
+		OngoingMessage: "Pulling changes from remote repository...",
+		DoneMessage:    "Pulled changes from remote repository.",
+		ErrorMessage:   "Failed to pull changes from remote repository.",
+		PrintCommand:   verbose,
+		PrintStdout:    verbose,
+		PrintStderr:    verbose,
+	}
+
+	err := commandTask.Start()
+	if err != nil {
+		return "", err
+	}
+
+	return strings.TrimSpace(commandTask.Stdout), nil
+}
 
 // Pull pulls the latest changes from the remote Git repository.
 func Pull(verbose bool) error {

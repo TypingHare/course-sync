@@ -17,6 +17,10 @@ type CommandTask struct {
 	PrintCommand   bool     // Whether to print the external command.
 	PrintStdout    bool     // Whether to print the standard output of the command.
 	PrintStderr    bool     // Whether to print the standard error of the command.
+
+	ExitCode int    // Exit code of the command.
+	Stdout   string // Captured standard output.
+	Stderr   string // Captured standard error.
 }
 
 func (commandTask *CommandTask) Start() error {
@@ -35,7 +39,7 @@ func (commandTask *CommandTask) Start() error {
 	spinner := ui.NewSpinner(ui.MakeOngoing(ongoingMessage))
 	spinner.Start()
 
-	stdout, stderr, err := RunCommand(commandTask.Command, commandTask.Args...)
+	exitCode, stdout, stderr, err := RunCommand(commandTask.Command, commandTask.Args...)
 
 	spinner.Stop()
 	if err != nil {
@@ -51,6 +55,10 @@ func (commandTask *CommandTask) Start() error {
 	if commandTask.PrintStderr {
 		PrintExternalCommandStderr(stderr, strings.Repeat(" ", 3))
 	}
+
+	commandTask.ExitCode = exitCode
+	commandTask.Stdout = stdout
+	commandTask.Stderr = stderr
 
 	return err
 }
