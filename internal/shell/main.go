@@ -33,15 +33,3 @@ func MakeOngoing(message string) string {
 func MakeDone(message string) string {
 	return color.New(color.FgHiBlack).SprintFunc()(message)
 }
-
-func MakeSuccess(message string) string {
-	return fmt.Sprintf("🟩 %s", message)
-}
-
-func MakeWarning(message string) string {
-	return fmt.Sprintf("🟧 %s", message)
-}
-
-func MakeError(message string) string {
-	return fmt.Sprintf("🟥 %s", message)
-}

@@ -13,7 +13,9 @@ var initCommand = &cobra.Command{
 	Short: "Initialize the application configuration.",
 	Long: `This command initializes the application configuration file with default 
     configurations.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
+		initStore()
+		return appConfigStore.InitFile(force)
 	},
 }
 

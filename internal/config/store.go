@@ -13,6 +13,49 @@ type Store struct {
 	v *viper.Viper
 }
 
+func (store *Store) seedDefaults(def Config) error {
+	// SetDefault wants key/value pairs, so either:
+	// A) call SetDefault per field (most explicit), or
+	// B) convert struct -> map and SetDefault recursively (more generic)
+	//
+	// I’ll show option B using JSON round-trip to map:
+	m, err := configToMap(def)
+	if err != nil {
+		return err
+	}
+	setDefaultsFromMap(store.v, "", m)
+	return nil
+}
+
+func configToMap(cfg Config) (map[string]any, error) {
+	b, err := json.Marshal(cfg)
+	if err != nil {
+		return nil, err
+	}
+	var m map[string]any
+	if err := json.Unmarshal(b, &m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func setDefaultsFromMap(v *viper.Viper, prefix string, m map[string]any) {
+	for k, val := range m {
+		fullKey := k
+		if prefix != "" {
+			fullKey = prefix + "." + k
+		}
+
+		// Recurse into nested objects
+		if child, ok := val.(map[string]any); ok {
+			setDefaultsFromMap(v, fullKey, child)
+			continue
+		}
+
+		v.SetDefault(fullKey, val)
+	}
+}
+
 func NewStore() (*Store, error) {
 	v := viper.New()
 
@@ -24,33 +67,24 @@ func NewStore() (*Store, error) {
 	v.SetConfigFile(configFilePath)
 	v.SetConfigType("json")
 
-	// Create config file with defaults if it doesn't exist
-	if _, err := os.Stat(configFilePath); os.IsNotExist(err) {
-		if err := os.MkdirAll(filepath.Dir(configFilePath), 0o755); err != nil {
-			return nil, fmt.Errorf("create config dir: %w", err)
-		}
+	store := &Store{v: v}
 
-		defaultConfig := GetDefault()
-
-		bytes, err := json.MarshalIndent(defaultConfig, "", "  ")
-		if err != nil {
-			return nil, fmt.Errorf("marshal default config: %w", err)
-		}
-
-		if err := os.WriteFile(configFilePath, bytes, 0o644); err != nil {
-			return nil, fmt.Errorf("write default config: %w", err)
-		}
+	// Seed defaults into memory always
+	if err := store.seedDefaults(GetDefault()); err != nil {
+		return nil, fmt.Errorf("seed defaults: %w", err)
 	}
 
-	// Now read the config (guaranteed to exist)
+	// Read file if present; if missing, keep defaults
 	if err := v.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("read config: %w", err)
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			return nil, fmt.Errorf("read config: %w", err)
+		}
 	}
 
-	return &Store{v: v}, nil
+	return store, nil
 }
 
-// Load reads the config from file and environment variables.
+// Load reads the config from file.
 func (store *Store) Load() (Config, error) {
 	var config Config
 	if err := store.v.Unmarshal(&config); err != nil {
@@ -74,6 +108,56 @@ func (store *Store) Save() error {
 				return fmt.Errorf("write config: %w", err2)
 			}
 		}
+	}
+
+	return nil
+}
+
+func (store *Store) InitFile(force bool) error {
+	path := store.v.ConfigFileUsed()
+	if path == "" {
+		return fmt.Errorf("config file path is not set")
+	}
+
+	// If file exists and not force -> stop
+	if _, err := os.Stat(path); err == nil && !force {
+		return fmt.Errorf("config file already exists (use --force to overwrite)")
+	} else if err != nil && !os.IsNotExist(err) {
+		return fmt.Errorf("stat config: %w", err)
+	}
+
+	// Ensure parent dir exists
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+		return fmt.Errorf("create config dir: %w", err)
+	}
+
+	// Get the current in-memory config (file merged over defaults)
+	cfg, err := store.Load()
+	if err != nil {
+		return err
+	}
+
+	data, err := json.MarshalIndent(cfg, "", "  ")
+	if err != nil {
+		return fmt.Errorf("marshal config: %w", err)
+	}
+
+	// Write (overwrite if force, otherwise create new)
+	flags := os.O_WRONLY | os.O_CREATE
+	if force {
+		flags |= os.O_TRUNC
+	} else {
+		flags |= os.O_EXCL
+	}
+
+	f, err := os.OpenFile(path, flags, 0o644)
+	if err != nil {
+		return fmt.Errorf("write config file: %w", err)
+	}
+	defer f.Close()
+
+	if _, err := f.Write(data); err != nil {
+		return fmt.Errorf("write config bytes: %w", err)
 	}
 
 	return nil
