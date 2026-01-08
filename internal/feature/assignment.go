@@ -1,9 +1,7 @@
 package feature
 
 import (
-	"encoding/json"
 	"fmt"
-	"os"
 	"path/filepath"
 	"time"
 
@@ -11,11 +9,13 @@ import (
 )
 
 type Assignment struct {
-	Name        string    `json:"name"`        // Short name or identifier for the assignment.
-	Title       string    `json:"title"`       // Full title of the assignment.
-	Description string    `json:"description"` // Detailed description of the assignment.
-	ReleaseTime time.Time `json:"releaseTime"` // Time when the assignment is released.
-	DueTime     time.Time `json:"dueTime"`     // Time when the assignment is due.
+	Name         string    `json:"name"`         // Short name or identifier for the assignment.
+	Title        string    `json:"title"`        // Full title of the assignment.
+	Description  string    `json:"description"`  // Detailed description of the assignment.
+	ReleasedAt   time.Time `json:"releasedAt"`   // Time when the assignment is released.
+	DueAt        time.Time `json:"dueAt"`        // Time when the assignment is due.
+	MaxScore     float64   `json:"maxScore"`     // Maximum score achievable for the assignment.
+	PassingScore float64   `json:"passingScore"` // Minimum score required to pass the assignment.
 }
 
 // GetAssignments loads all assignments from the application's assignments file.
@@ -27,26 +27,17 @@ type Assignment struct {
 // The returned slice contains fully unmarshaled Assignment values. Callers should validate the
 // assignments if additional semantic checks are required.
 func GetAssignments() ([]Assignment, error) {
-	appDirPath, err := app.GetAppDirPath()
+	assignments, err := ReadJSONSlice[[]Assignment](app.ASSIGNMENTS_FILE_NAME)
 	if err != nil {
-		return nil, fmt.Errorf("get app dir: %w", err)
-	}
-
-	filePath := filepath.Join(appDirPath, app.ASSIGNMENTS_FILE_NAME)
-
-	data, err := os.ReadFile(filePath)
-	if err != nil {
-		return nil, fmt.Errorf("read %s: %w", filePath, err)
-	}
-
-	var assignments []Assignment
-	if err := json.Unmarshal(data, &assignments); err != nil {
-		return nil, fmt.Errorf("parse %s: %w", filePath, err)
+		return nil, err
 	}
 
 	return assignments, nil
 }
 
+// SubmitAssignment stages the specified assignment for commit in Git.
+//
+// The assignmentName parameter should correspond to the Name field of an Assignment.
 func SubmitAssignment(assignmentName string) error {
 	userDirPath, err := GetUserDirPath()
 	if err != nil {

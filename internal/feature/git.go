@@ -29,6 +29,7 @@ func GetGitUserName() (string, error) {
 	return strings.TrimSpace(commandTask.Stdout), nil
 }
 
+// GitAdd stages the specified file for commit in Git.
 func GitAdd(filePath string) error {
 	commandTask := execx.CommandTask{
 		Command:        "git",

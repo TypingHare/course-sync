@@ -32,3 +32,6 @@ const PROTOTYPE_DIR_NAME = "[prototype]"
 
 // Assignments file name inside the application directory.
 const ASSIGNMENTS_FILE_NAME = "assignments.json"
+
+// Grade history file name inside the application directory.
+const GRADE_HISTORY_FILE_NAME = "grade_history.json"

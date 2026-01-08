@@ -23,13 +23,13 @@ var listCmd = &cobra.Command{
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.Header([]string{"Name", "Title", "Release", "Due"})
+		table.Header([]string{"Name", "Title", "Released At", "Due At"})
 		for _, assignment := range assignments {
 			table.Append([]string{
 				assignment.Name,
 				assignment.Title,
-				assignment.ReleaseTime.Format("2006-01-02 15:04"),
-				assignment.DueTime.Format("2006-01-02 15:04"),
+				assignment.ReleasedAt.Format("2006-01-02 15:04"),
+				assignment.DueAt.Format("2006-01-02 15:04"),
 			})
 		}
 

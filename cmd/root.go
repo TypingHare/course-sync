@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/TypingHare/course-sync/cmd/assignment"
+	"github.com/TypingHare/course-sync/cmd/grade"
 	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/spf13/cobra"
 )
@@ -36,5 +37,6 @@ func init() {
 		pushCmd,
 		syncCmd,
 		assignment.Command(),
+		grade.Command(),
 	)
 }
