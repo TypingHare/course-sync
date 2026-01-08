@@ -11,7 +11,7 @@ func Command() *cobra.Command {
 		Long:  `Manage assignments.`,
 	}
 
-	cmd.AddCommand(listCmd, submitCmd)
+	cmd.AddCommand(listCmd, prepareCmd, submitCmd)
 
 	return cmd
 }

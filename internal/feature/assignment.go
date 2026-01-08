@@ -46,3 +46,35 @@ func SubmitAssignment(assignmentName string) error {
 
 	return GitAdd(filepath.Join(userDirPath, assignmentName))
 }
+
+// FindAssignmentByName searches for an assignment by its name in the provided slice.
+func FindAssignmentByName(assignments []Assignment, name string) *Assignment {
+	for _, assignment := range assignments {
+		if assignment.Name == name {
+			return &assignment
+		}
+	}
+
+	return nil
+}
+
+// GetUserDirPath returns the path to the user directory where assignments are stored.
+func GetUserAssignmentDirPath(assignmentName string) (string, error) {
+	userDirPath, err := GetUserDirPath()
+	if err != nil {
+		return "", fmt.Errorf("get user dir path: %w", err)
+	}
+
+	return filepath.Join(userDirPath, assignmentName), nil
+}
+
+// GetPrototypeAssignmentDirPath returns the path to the prototype directory for the specified
+// assignment.
+func GetPrototypeAssignmentDirPath(assignmentName string) (string, error) {
+	prototypeDirPath, err := app.GetPrototypeDirPath()
+	if err != nil {
+		return "", fmt.Errorf("get prototype dir path: %w", err)
+	}
+
+	return filepath.Join(prototypeDirPath, assignmentName), nil
+}
