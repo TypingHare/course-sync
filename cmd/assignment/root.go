@@ -7,8 +7,8 @@ import (
 func Command() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "assignment",
-		Short: "",
-		Long:  ``,
+		Short: "Manage assignments.",
+		Long:  `Manage assignments.`,
 	}
 
 	cmd.AddCommand(listCmd, submitCmd)
