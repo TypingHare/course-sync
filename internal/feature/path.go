@@ -33,6 +33,20 @@ func GetUserDirPath() (string, error) {
 }
 
 // DirExists checks if a directory exists at the specified path.
+func FileExists(path string) (bool, error) {
+	info, err := os.Stat(path)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	return !info.IsDir(), nil
+}
+
+// DirExists checks if a directory exists at the specified path.
 func DirExists(path string) (bool, error) {
 	info, err := os.Stat(path)
 	if err != nil {
