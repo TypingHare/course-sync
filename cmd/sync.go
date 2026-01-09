@@ -14,8 +14,9 @@ remote repositories are up to date.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
 		app.RunAll(
-			func() error { return feature.Pull() },
-			func() error { return feature.Push() },
+			func() error { return feature.GitPull() },
+			func() error { return feature.MakeSyncCommit() },
+			func() error { return feature.GitPush() },
 		)
 	},
 }

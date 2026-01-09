@@ -87,6 +87,21 @@ func GetProjectDirPath() (string, error) {
 	return projectDirCache, nil
 }
 
+// GetRelativePath returns the path of absolutePath relative to the project directory.
+func GetRelativePath(absolutePath string) (string, error) {
+	projectDirPath, err := GetProjectDirPath()
+	if err != nil {
+		return "", err
+	}
+
+	relativePath, err := filepath.Rel(projectDirPath, absolutePath)
+	if err != nil {
+		return "", err
+	}
+
+	return relativePath, nil
+}
+
 // GetDocsDirPath returns the path to the documentation directory within the project.
 func GetDocsDirPath() (string, error) {
 	projectDirPath, err := GetProjectDirPath()

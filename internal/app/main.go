@@ -7,5 +7,6 @@ func RunAll(fns ...func() error) error {
 			return err
 		}
 	}
+
 	return nil
 }

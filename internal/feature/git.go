@@ -46,14 +46,14 @@ func GitAdd(filePath string) error {
 	return commandTask.Start()
 }
 
-// Pull pulls the latest changes from the remote Git repository.
-func Pull() error {
+// GitCommit commits the staged changes to Git with the provided commit message.
+func GitCommit(message string) error {
 	commandTask := execx.CommandTask{
 		Command:        "git",
-		Args:           []string{"pull"},
-		OngoingMessage: "Pulling changes from remote repository...",
-		DoneMessage:    "Pulled changes from remote repository.",
-		ErrorMessage:   "Failed to pull changes from remote repository.",
+		Args:           []string{"commit", "-m", message},
+		OngoingMessage: "Committing changes to Git...",
+		DoneMessage:    "Changes committed to Git.",
+		ErrorMessage:   "Failed to commit changes to Git.",
 		Quiet:          app.Quiet,
 		PrintCommand:   app.Verbose,
 		PrintStdout:    app.Verbose,
@@ -63,14 +63,31 @@ func Pull() error {
 	return commandTask.Start()
 }
 
-// Push pushes the local changes to the remote Git repository.
-func Push() error {
+// GitPush pushes the local changes to the remote Git repository.
+func GitPush() error {
 	commandTask := execx.CommandTask{
 		Command:        "git",
 		Args:           []string{"push"},
 		OngoingMessage: "Pushing changes to remote repository...",
 		DoneMessage:    "Pushed changes to remote repository.",
 		ErrorMessage:   "Failed to push changes to remote repository.",
+		Quiet:          app.Quiet,
+		PrintCommand:   app.Verbose,
+		PrintStdout:    app.Verbose,
+		PrintStderr:    app.Verbose,
+	}
+
+	return commandTask.Start()
+}
+
+// GitPull pulls the latest changes from the remote Git repository.
+func GitPull() error {
+	commandTask := execx.CommandTask{
+		Command:        "git",
+		Args:           []string{"pull"},
+		OngoingMessage: "Pulling changes from remote repository...",
+		DoneMessage:    "Pulled changes from remote repository.",
+		ErrorMessage:   "Failed to pull changes from remote repository.",
 		Quiet:          app.Quiet,
 		PrintCommand:   app.Verbose,
 		PrintStdout:    app.Verbose,

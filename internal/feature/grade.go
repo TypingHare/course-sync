@@ -8,6 +8,7 @@ import (
 
 type Grade struct {
 	AssignmentName string
+	SubmissionHash string
 	Score          float64
 	Feedback       string
 	GradedAt       time.Time

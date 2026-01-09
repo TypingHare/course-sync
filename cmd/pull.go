@@ -11,6 +11,6 @@ var pullCmd = &cobra.Command{
 	Long:  ``,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		feature.Pull()
+		feature.GitPull()
 	},
 }

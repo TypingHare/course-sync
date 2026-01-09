@@ -5,6 +5,7 @@ import (
 
 	"github.com/TypingHare/course-sync/cmd/assignment"
 	"github.com/TypingHare/course-sync/cmd/grade"
+	"github.com/TypingHare/course-sync/cmd/submission"
 	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/spf13/cobra"
 )
@@ -32,11 +33,13 @@ func init() {
 		BoolVarP(&app.Quiet, "quiet", "q", false, "Suppress non-error output.")
 
 	rootCmd.AddCommand(
+		roleCmd,
 		pathCmd,
 		pullCmd,
 		pushCmd,
 		syncCmd,
 		assignment.Command(),
+		submission.Command(),
 		grade.Command(),
 	)
 }

@@ -57,6 +57,8 @@ var prepareCmd = &cobra.Command{
 					"Assignment '%s' already prepared. Use --force to overwrite.\n",
 					assignmentName,
 				)
+
+				return
 			}
 		}
 

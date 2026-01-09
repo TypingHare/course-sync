@@ -4,7 +4,7 @@
 
 ### Student
 
-- prepare assignments
+- prepare assignments (done)
 - submission records
 - view grades and feedback
 

@@ -3,6 +3,7 @@ package feature
 import (
 	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -47,16 +48,24 @@ func DirExists(path string) (bool, error) {
 
 // MakeDirIfNotExists creates a directory at the specified path if it does not already exist.
 func MakeDirIfNotExists(dirPath string) error {
+	relativePath, err := app.GetRelativePath(dirPath)
+	if err != nil {
+		return errors.New("failed to get relative path: " + err.Error())
+	}
+
 	commandTask := execx.CommandTask{
-		Command:        "mkdir",
-		Args:           []string{"-p", dirPath},
-		OngoingMessage: fmt.Sprintf("Creating directory <%s> if it does not exist...", dirPath),
-		DoneMessage:    fmt.Sprintf("Directory <%s> created or already exists.", dirPath),
-		ErrorMessage:   fmt.Sprintf("Failed to create directory <%s>.", dirPath),
-		Quiet:          app.Quiet,
-		PrintCommand:   app.Verbose,
-		PrintStdout:    app.Verbose,
-		PrintStderr:    app.Verbose,
+		Command: "mkdir",
+		Args:    []string{"-p", dirPath},
+		OngoingMessage: fmt.Sprintf(
+			"Creating directory <%s> if it does not exist...",
+			relativePath,
+		),
+		DoneMessage:  fmt.Sprintf("Directory <%s> created or already exists.", relativePath),
+		ErrorMessage: fmt.Sprintf("Failed to create directory <%s>.", relativePath),
+		Quiet:        app.Quiet,
+		PrintCommand: app.Verbose,
+		PrintStdout:  app.Verbose,
+		PrintStderr:  app.Verbose,
 	}
 
 	return commandTask.Start()
@@ -64,12 +73,17 @@ func MakeDirIfNotExists(dirPath string) error {
 
 // DeleteDir deletes the directory at the specified path.
 func DeleteDir(dirPath string) error {
+	relativePath, err := app.GetRelativePath(dirPath)
+	if err != nil {
+		return errors.New("failed to get relative path: " + err.Error())
+	}
+
 	commandTask := execx.CommandTask{
 		Command:        "rm",
 		Args:           []string{"-rf", dirPath},
-		OngoingMessage: fmt.Sprintf("Deleting directory <%s>...", dirPath),
-		DoneMessage:    fmt.Sprintf("Directory <%s> deleted.", dirPath),
-		ErrorMessage:   fmt.Sprintf("Failed to delete directory <%s>.", dirPath),
+		OngoingMessage: fmt.Sprintf("Deleting directory <%s>...", relativePath),
+		DoneMessage:    fmt.Sprintf("Directory <%s> deleted.", relativePath),
+		ErrorMessage:   fmt.Sprintf("Failed to delete directory <%s>.", relativePath),
 		Quiet:          app.Quiet,
 		PrintCommand:   app.Verbose,
 		PrintStdout:    app.Verbose,
@@ -81,23 +95,33 @@ func DeleteDir(dirPath string) error {
 
 // CopyDir copies a directory from sourceDirPath to destDirPath.
 func CopyDir(sourceDirPath string, destDirPath string) error {
+	relativeSourcePath, err := app.GetRelativePath(sourceDirPath)
+	if err != nil {
+		return errors.New("failed to get relative source path: " + err.Error())
+	}
+
+	relativeDestPath, err := app.GetRelativePath(destDirPath)
+	if err != nil {
+		return errors.New("failed to get relative destination path: " + err.Error())
+	}
+
 	commandTask := execx.CommandTask{
 		Command: "cp",
 		Args:    []string{"-r", sourceDirPath, destDirPath},
 		OngoingMessage: fmt.Sprintf(
 			"Copying directory from <%s> to <%s>...",
-			sourceDirPath,
-			destDirPath,
+			relativeSourcePath,
+			relativeDestPath,
 		),
 		DoneMessage: fmt.Sprintf(
 			"Directory copied from <%s> to <%s>.",
-			sourceDirPath,
-			destDirPath,
+			relativeSourcePath,
+			relativeDestPath,
 		),
 		ErrorMessage: fmt.Sprintf(
 			"Failed to copy directory from <%s> to <%s>.",
-			sourceDirPath,
-			destDirPath,
+			relativeSourcePath,
+			relativeDestPath,
 		),
 		Quiet:        app.Quiet,
 		PrintCommand: app.Verbose,
@@ -106,4 +130,29 @@ func CopyDir(sourceDirPath string, destDirPath string) error {
 	}
 
 	return commandTask.Start()
+}
+
+// CollectFiles collects all files in the specified directory and its subdirectories, excluding
+// directories named "__pycache__" and files named ".DS_Store". It returns the absolute paths of the
+// collected files.
+func CollectFiles(dirPath string) ([]string, error) {
+	var files []string
+
+	err := filepath.WalkDir(dirPath, func(path string, dirEntry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if dirEntry.IsDir() && dirEntry.Name() == "__pycache__" {
+			return fs.SkipDir
+		}
+
+		if !dirEntry.IsDir() && dirEntry.Name() != ".DS_Store" {
+			files = append(files, path)
+		}
+
+		return nil
+	})
+
+	return files, err
 }

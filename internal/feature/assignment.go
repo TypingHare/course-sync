@@ -35,18 +35,6 @@ func GetAssignments() ([]Assignment, error) {
 	return assignments, nil
 }
 
-// SubmitAssignment stages the specified assignment for commit in Git.
-//
-// The assignmentName parameter should correspond to the Name field of an Assignment.
-func SubmitAssignment(assignmentName string) error {
-	userDirPath, err := GetUserDirPath()
-	if err != nil {
-		return fmt.Errorf("get user dir path: %w", err)
-	}
-
-	return GitAdd(filepath.Join(userDirPath, assignmentName))
-}
-
 // FindAssignmentByName searches for an assignment by its name in the provided slice.
 func FindAssignmentByName(assignments []Assignment, name string) *Assignment {
 	for _, assignment := range assignments {
