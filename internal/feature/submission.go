@@ -149,5 +149,5 @@ func AppendSubmissionToHistory(submission Submission) error {
 
 	submissionHistory = append(submissionHistory, submission)
 
-	return WriteJSONSlice(app.GRADE_HISTORY_FILE_NAME, submissionHistory)
+	return WriteJSONSlice(app.SUBMISSION_HISTORY_FILE_NAME, submissionHistory)
 }

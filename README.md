@@ -5,7 +5,7 @@
 ### Student
 
 - prepare assignments (done)
-- submission records
+- submission records (done)
 - view grades and feedback
 
 ### Master

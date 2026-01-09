@@ -11,7 +11,7 @@ func Command() *cobra.Command {
 		Long:  `Manage grades.`,
 	}
 
-	cmd.AddCommand(listCmd)
+	cmd.AddCommand(listCmd, feedbackCmd)
 
 	return cmd
 }

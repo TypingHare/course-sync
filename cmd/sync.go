@@ -6,6 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var shouldCommitOnly bool
+
 var syncCmd = &cobra.Command{
 	Use:   "sync",
 	Short: "Synchronize local repository with the remote repository.",
@@ -13,10 +15,24 @@ var syncCmd = &cobra.Command{
 remote repositories are up to date.`,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		app.RunAll(
-			func() error { return feature.GitPull() },
-			func() error { return feature.MakeSyncCommit() },
-			func() error { return feature.GitPush() },
-		)
+		if shouldCommitOnly {
+			feature.MakeSyncCommit()
+		} else {
+			app.RunAll(
+				func() error { return feature.GitPull() },
+				func() error { return feature.MakeSyncCommit() },
+				func() error { return feature.GitPush() },
+			)
+		}
 	},
+}
+
+func init() {
+	syncCmd.Flags().BoolVarP(
+		&shouldCommitOnly,
+		"commit-only",
+		"c",
+		false,
+		"Only create a sync commit without pulling or pushing changes.",
+	)
 }

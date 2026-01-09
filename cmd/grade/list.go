@@ -24,10 +24,11 @@ var listCmd = &cobra.Command{
 		}
 
 		table := tablewriter.NewWriter(os.Stdout)
-		table.Header([]string{"Assignment Name", "Score", "Graded At"})
+		table.Header([]string{"Assignment Name", "Submission Hash", "Score", "Graded At"})
 		for _, grade := range grades {
 			table.Append([]string{
 				grade.AssignmentName,
+				grade.SubmissionHash,
 				strconv.FormatFloat(grade.Score, 'f', 2, 64),
 				grade.GradedAt.Format("2006-01-02 15:04"),
 			})
