@@ -10,5 +10,7 @@ func Command() *cobra.Command {
 listing students.`,
 	}
 
+	cmd.AddCommand(listCmd, registerCmd)
+
 	return cmd
 }

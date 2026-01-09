@@ -60,8 +60,8 @@ func DirExists(path string) (bool, error) {
 	return info.IsDir(), nil
 }
 
-// MakeDirIfNotExists creates a directory at the specified path if it does not already exist.
-func MakeDirIfNotExists(dirPath string) error {
+// EnsureDir creates a directory at the specified path if it does not already exist.
+func EnsureDir(dirPath string) error {
 	relativePath, err := app.GetRelativePath(dirPath)
 	if err != nil {
 		return errors.New("failed to get relative path: " + err.Error())

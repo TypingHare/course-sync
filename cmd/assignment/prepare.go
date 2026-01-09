@@ -72,7 +72,7 @@ var prepareCmd = &cobra.Command{
 		}
 
 		// Ensure the parent directory of the user assignment directory exists.
-		err = feature.MakeDirIfNotExists(filepath.Dir(userAssignmentDirPath))
+		err = feature.EnsureDir(filepath.Dir(userAssignmentDirPath))
 		if err != nil {
 			cmd.PrintErrf("Error creating user assignments base directory: %v\n", err)
 			return

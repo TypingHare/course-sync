@@ -34,5 +34,11 @@ func GenerateMasterKeyPair() error {
 		return err
 	}
 
+	// Ensure the application directory exists.
+	err = EnsureDir(appDirPath)
+	if err != nil {
+		return err
+	}
+
 	return GenerateKeyPair(appDirPath)
 }

@@ -12,9 +12,10 @@ import (
 
 // StudentInfo represents a stutent's information.
 type StudentInfo struct {
-	Name           string `mapstructure:"name"`
-	Email          string `mapstructure:"email"`
-	RepositoryPath string `mapstructure:"repositoryPath"`
+	Id            int    `mapstructure:"id"`
+	Name          string `mapstructure:"name"`
+	Email         string `mapstructure:"email"`
+	RepositoryUrl string `mapstructure:"repositoryUrl"`
 }
 
 // Config represents the application configuration structure.
@@ -68,7 +69,7 @@ func Load(configPath string) (*Config, error) {
 		return nil, err
 	}
 
-	return nil, nil
+	return config, nil
 }
 
 // Validate checks if the config struct has valid values.

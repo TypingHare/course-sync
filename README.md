@@ -2,8 +2,6 @@
 
 ## TODO List
 
-### Student
-
 ### Master
 
 - Register students

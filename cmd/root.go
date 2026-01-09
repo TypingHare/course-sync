@@ -1,9 +1,11 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/TypingHare/course-sync/cmd/assignment"
+	"github.com/TypingHare/course-sync/cmd/config"
 	"github.com/TypingHare/course-sync/cmd/doc"
 	"github.com/TypingHare/course-sync/cmd/grade"
 	"github.com/TypingHare/course-sync/cmd/ssh"
@@ -25,6 +27,7 @@ materials between local machines and remote repositories.`,
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
 }
@@ -42,6 +45,7 @@ func init() {
 		pullCmd,
 		pushCmd,
 		syncCmd,
+		config.Command(),
 		ssh.Command(),
 		assignment.Command(),
 		submission.Command(),
