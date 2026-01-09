@@ -9,9 +9,10 @@ import (
 // Role represents the user role in the application.
 type Role string
 
+// Defined user roles.
 const (
-	StudentRole Role = "student"
-	MasterRole  Role = "master"
+	RoleStudent Role = "student"
+	RoleMaster  Role = "master"
 )
 
 // RoleCache caches the determined role to avoid redundant file system checks.
@@ -34,9 +35,9 @@ func GetRole() (Role, error) {
 	}
 
 	if isMaster {
-		RoleCache = MasterRole
+		RoleCache = RoleMaster
 	} else {
-		RoleCache = StudentRole
+		RoleCache = RoleStudent
 	}
 
 	return RoleCache, nil

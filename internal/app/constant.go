@@ -15,7 +15,7 @@ const EXECUTABLE_NAME = "csync"
 const PROJECT_ROOT_MARKER_DIR_NAME = ".git"
 
 // Configuration file name
-const CONFIG_FILE_NAME = "course_sync.config.json"
+const CONFIG_FILE_NAME = "csync.config.json"
 
 // Application directory name. This directory is created inside the project root directory and is
 // hidden. It contains application-specific data, such as assignments.
@@ -38,6 +38,9 @@ const SUBMISSION_HISTORY_FILE_NAME = "submission_history.json"
 
 // Grade history file name inside the application directory.
 const GRADE_HISTORY_FILE_NAME = "grade_history.json"
+
+// Documentation file name inside the documentation directory.
+const DOCS_FILE_NAME = "docs.json"
 
 // Master private key file name inside the application directory.
 const MASTER_PRIVATE_KEY_FILE_NAME = "master"

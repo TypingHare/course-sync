@@ -4,10 +4,13 @@ import (
 	"os"
 
 	"github.com/TypingHare/course-sync/cmd/assignment"
+	"github.com/TypingHare/course-sync/cmd/doc"
 	"github.com/TypingHare/course-sync/cmd/grade"
 	"github.com/TypingHare/course-sync/cmd/ssh"
+	"github.com/TypingHare/course-sync/cmd/student"
 	"github.com/TypingHare/course-sync/cmd/submission"
 	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/TypingHare/course-sync/internal/feature"
 	"github.com/spf13/cobra"
 )
 
@@ -43,5 +46,13 @@ func init() {
 		assignment.Command(),
 		submission.Command(),
 		grade.Command(),
+		doc.Command(),
 	)
+
+	role, err := feature.GetRole()
+	if err == nil && role == feature.RoleMaster {
+		rootCmd.AddCommand(
+			student.Command(),
+		)
+	}
 }

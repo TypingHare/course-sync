@@ -8,7 +8,7 @@ import (
 
 // GetConfigFilePath returns the absolute path to the configuration file.
 func GetConfigFilePath() (string, error) {
-	dir, err := app.FindProjectDirPath("")
+	dir, err := app.GetProjectDirPath()
 	if err != nil {
 		return "", err
 	}

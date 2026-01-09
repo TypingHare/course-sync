@@ -107,14 +107,58 @@ func DeleteDir(dirPath string) error {
 	return commandTask.Start()
 }
 
+// CopyFile copies a file to a destination directory using the "cp" command.
+func CopyFile(sourceFiPath string, destDirPath string, force bool) error {
+	relativeSourcePath, err := app.GetRelativePath(sourceFiPath)
+	if err != nil {
+		return errors.New("failed to get relative source directory path: " + err.Error())
+	}
+
+	relativeDestDirPath, err := app.GetRelativePath(destDirPath)
+	if err != nil {
+		return errors.New("failed to get relative destination directory path: " + err.Error())
+	}
+
+	args := []string{relativeSourcePath, destDirPath}
+	if force {
+		args = append([]string{"-f"}, args...)
+	}
+
+	commandTask := execx.CommandTask{
+		Command: "cp",
+		Args:    args,
+		OngoingMessage: fmt.Sprintf(
+			"Copying file <%s> to <%s>...",
+			relativeSourcePath,
+			relativeDestDirPath,
+		),
+		DoneMessage: fmt.Sprintf(
+			"File copied from <%s> to <%s>.",
+			relativeSourcePath,
+			relativeDestDirPath,
+		),
+		ErrorMessage: fmt.Sprintf(
+			"Failed to copy file <%s> to <%s>.",
+			relativeSourcePath,
+			relativeDestDirPath,
+		),
+		Quiet:        app.Quiet,
+		PrintCommand: app.Verbose,
+		PrintStdout:  app.Verbose,
+		PrintStderr:  app.Verbose,
+	}
+
+	return commandTask.Start()
+}
+
 // CopyDir copies a directory from sourceDirPath to destDirPath.
 func CopyDir(sourceDirPath string, destDirPath string) error {
-	relativeSourcePath, err := app.GetRelativePath(sourceDirPath)
+	relativeSourceDirPath, err := app.GetRelativePath(sourceDirPath)
 	if err != nil {
 		return errors.New("failed to get relative source path: " + err.Error())
 	}
 
-	relativeDestPath, err := app.GetRelativePath(destDirPath)
+	relativeDestDirPath, err := app.GetRelativePath(destDirPath)
 	if err != nil {
 		return errors.New("failed to get relative destination path: " + err.Error())
 	}
@@ -124,18 +168,18 @@ func CopyDir(sourceDirPath string, destDirPath string) error {
 		Args:    []string{"-r", sourceDirPath, destDirPath},
 		OngoingMessage: fmt.Sprintf(
 			"Copying directory from <%s> to <%s>...",
-			relativeSourcePath,
-			relativeDestPath,
+			relativeSourceDirPath,
+			relativeDestDirPath,
 		),
 		DoneMessage: fmt.Sprintf(
 			"Directory copied from <%s> to <%s>.",
-			relativeSourcePath,
-			relativeDestPath,
+			relativeSourceDirPath,
+			relativeDestDirPath,
 		),
 		ErrorMessage: fmt.Sprintf(
 			"Failed to copy directory from <%s> to <%s>.",
-			relativeSourcePath,
-			relativeDestPath,
+			relativeSourceDirPath,
+			relativeDestDirPath,
 		),
 		Quiet:        app.Quiet,
 		PrintCommand: app.Verbose,
