@@ -1,11 +1,15 @@
 package cli
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/spf13/cobra"
+)
 
-func Command() *cobra.Command {
+func Command(appCtx *app.AppContext) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "csync",
-		Short:   "Course Sync (csync) helps students and teachers synchronize course materials.",
+		Use: "csync",
+		Short: "Course Sync (csync) helps students and teachers " +
+			"synchronize course materials.",
 		Long:    ``,
 		Version: "2026.1",
 	}
