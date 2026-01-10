@@ -27,9 +27,9 @@ func GetAssignments(appCtx *app.Context) ([]Assignment, error) {
 // FindAssignmentByName searches for an assignment by its name in the provided
 // slice.
 func FindAssignmentByName(assignments []Assignment, name string) *Assignment {
-	for _, assignment := range assignments {
-		if assignment.Name == name {
-			return &assignment
+	for i := range assignments {
+		if assignments[i].Name == name {
+			return &assignments[i]
 		}
 	}
 
