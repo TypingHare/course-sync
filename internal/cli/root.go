@@ -15,7 +15,25 @@ func Cmd(appCtx *app.Context) *cobra.Command {
 	}
 
 	cmd.SetVersionTemplate("{{.Version}}\n")
-	cmd.AddCommand(ContextCmd(*appCtx))
+	cmd.PersistentFlags().BoolVarP(
+		&appCtx.Verbose,
+		"verbose",
+		"v",
+		false,
+		"Enable verbose output.",
+	)
+	cmd.PersistentFlags().BoolVarP(
+		&appCtx.Quiet,
+		"quiet",
+		"q",
+		false,
+		"Suppress non-error output.",
+	)
+
+	cmd.AddCommand(
+		ContextCmd(*appCtx),
+		PathCmd(appCtx),
+	)
 
 	return cmd
 }
