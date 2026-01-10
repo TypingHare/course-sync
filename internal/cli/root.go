@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Command(appCtx *app.AppContext) *cobra.Command {
+func Cmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use: "csync",
 		Short: "Course Sync (csync) helps students and teachers " +
@@ -15,6 +15,7 @@ func Command(appCtx *app.AppContext) *cobra.Command {
 	}
 
 	cmd.SetVersionTemplate("{{.Version}}\n")
+	cmd.AddCommand(ContextCmd(*appCtx))
 
 	return cmd
 }

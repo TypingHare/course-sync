@@ -17,7 +17,7 @@ func main() {
 	}
 
 	// Execute the CLI command.
-	err = cli.Command(appCtx).Execute()
+	err = cli.Cmd(appCtx).Execute()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)

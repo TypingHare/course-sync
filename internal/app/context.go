@@ -2,7 +2,9 @@ package app
 
 import (
 	"os"
+	"path/filepath"
 
+	"github.com/TypingHare/course-sync/internal/domain/role"
 	"github.com/TypingHare/course-sync/internal/infra/config"
 	"github.com/TypingHare/course-sync/internal/infra/jsonstore"
 )
@@ -10,11 +12,14 @@ import (
 // Configuration file name.
 const CONFIG_FILE_NAME = "config.json"
 
-// Singleton application context.
-var appContext *AppContext
+// Hidden directory name.
+const HIDDEN_DIR_NAME = ".csync"
 
-// AppContext holds the context for the Course Sync application.
-type AppContext struct {
+// Singleton application context.
+var context *Context
+
+// Context holds the context for the Course Sync application.
+type Context struct {
 	// CLI options (flags).
 	Verbose bool // Enable verbose output.
 	Quiet   bool // Enable quiet mode, suppressing output.
@@ -22,35 +27,47 @@ type AppContext struct {
 	// Environment settings.
 	WorkingDir string         // Current working directory.
 	ProjectDir string         // Path to the project root directory.
+	HiddenDir  string         // Path to the Course Sync hidden directory.
 	Config     *config.Config // Application configuration.
+	Role       role.Role      // User role in the application.
 }
 
 // BuildContext initializes and returns the application context.
-func BuildContext() (*AppContext, error) {
-	appContext = &AppContext{}
+func BuildContext() (*Context, error) {
+	context = &Context{}
 
 	// Resolve working directory.
 	workingDir, err := os.Getwd()
 	if err != nil {
 		return nil, err
 	}
-	appContext.WorkingDir = workingDir
+	context.WorkingDir = workingDir
 
 	// Find project directory.
 	projectDir, err := FindProjectDir(workingDir)
 	if err != nil {
 		return nil, err
 	}
-	appContext.ProjectDir = projectDir
+	context.ProjectDir = projectDir
+
+	// Set hidden directory path.
+	context.HiddenDir = filepath.Join(context.ProjectDir, HIDDEN_DIR_NAME)
 
 	// Load configuration.
 	config, _ := jsonstore.ReadJSONFile[config.Config](CONFIG_FILE_NAME)
-	appContext.Config = &config
+	context.Config = &config
 
-	return appContext, nil
+	// Determine user role.
+	userRole, err := role.GetRole(context.ProjectDir)
+	if err != nil {
+		return nil, err
+	}
+	context.Role = userRole
+
+	return context, nil
 }
 
 // SaveConfig saves the current configuration to the config file.
-func (ctx *AppContext) SaveConfig() error {
+func (ctx *Context) SaveConfig() error {
 	return jsonstore.WriteJSONFile(CONFIG_FILE_NAME, ctx.Config)
 }
