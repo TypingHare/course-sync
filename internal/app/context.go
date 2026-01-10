@@ -25,11 +25,13 @@ type Context struct {
 	Quiet   bool // Enable quiet mode, suppressing output.
 
 	// Environment settings.
-	WorkingDir string         // Current working directory.
-	ProjectDir string         // Path to the project root directory.
-	HiddenDir  string         // Path to the application hidden directory.
-	Config     *config.Config // Application configuration.
-	Role       role.Role      // User role in the application.
+	WorkingDir string    // Current working directory.
+	ProjectDir string    // Path to the project root directory.
+	HiddenDir  string    // Path to the application hidden directory.
+	Role       role.Role // User role in the application.
+
+	// Application configuration.
+	config *config.Config // Application configuration.
 }
 
 // BuildContext initializes and returns the application context.
@@ -53,10 +55,6 @@ func BuildContext() (*Context, error) {
 	// Set application hidden directory path.
 	context.HiddenDir = filepath.Join(context.ProjectDir, HIDDEN_DIR_NAME)
 
-	// Load configuration.
-	config, _ := jsonstore.ReadJSONFile[config.Config](CONFIG_FILE_NAME)
-	context.Config = &config
-
 	// Determine user role.
 	userRole, err := role.GetRole(context.ProjectDir)
 	if err != nil {
@@ -67,7 +65,18 @@ func BuildContext() (*Context, error) {
 	return context, nil
 }
 
+// GetConfig retrieves the application configuration, loading it from the Config
+// file if necessary.
+func (ctx *Context) GetConfig() *config.Config {
+	if ctx.config == nil {
+		config, _ := jsonstore.ReadJSONFile[config.Config](CONFIG_FILE_NAME)
+		context.config = &config
+	}
+
+	return ctx.config
+}
+
 // SaveConfig saves the current configuration to the config file.
 func (ctx *Context) SaveConfig() error {
-	return jsonstore.WriteJSONFile(CONFIG_FILE_NAME, ctx.Config)
+	return jsonstore.WriteJSONFile(CONFIG_FILE_NAME, ctx.config)
 }
