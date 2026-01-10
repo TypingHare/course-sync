@@ -104,7 +104,7 @@ func (s *Spinner) Start() {
 					}
 
 					frame := s.frames[i%numFrames]
-					fmt.Fprintf(s.out, "\r\033[2K%c  %s", frame, s.message)
+					fmt.Fprintf(s.out, "%c  %s", frame, s.message)
 					i++
 				}
 			}
