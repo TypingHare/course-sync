@@ -10,9 +10,6 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-// SRC_DIR_NAME is the name of the source directory within the project.
-const SRC_DIR_NAME = "src"
-
 // PROTOTYPE_WORKSPACE is the name of the prototype workspace directory.
 const PROTOTYPE_WORKSPACE = "prototype"
 
@@ -29,21 +26,12 @@ func GetUserWorkspaceDir(appCtx app.Context) (string, error) {
 		"_",
 		"-",
 	)
-	workSpaceDir := filepath.Join(
-		appCtx.ProjectDir,
-		SRC_DIR_NAME,
-		workspaceDirName,
-	)
 
-	return workSpaceDir, nil
+	return filepath.Join(appCtx.SrcDir, workspaceDirName), nil
 }
 
 // GetPrototypeWorkspaceDir constructs the path to the prototype workspace
 // directory within the project directory.
 func GetPrototypeWorkspaceDir(appCtx app.Context) string {
-	return filepath.Join(
-		appCtx.ProjectDir,
-		SRC_DIR_NAME,
-		PROTOTYPE_WORKSPACE,
-	)
+	return filepath.Join(appCtx.SrcDir, PROTOTYPE_WORKSPACE)
 }

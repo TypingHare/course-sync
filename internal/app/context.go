@@ -13,7 +13,10 @@ import (
 const CONFIG_FILE_NAME = "config.json"
 
 // Hidden directory name.
-const HIDDEN_DIR_NAME = ".csync"
+const APP_DATA_DIR_NAME = ".csync"
+
+// SRC_DIR_NAME is the name of the source directory within the project.
+const SRC_DIR_NAME = "src"
 
 // Singleton application context.
 var context *Context
@@ -27,7 +30,8 @@ type Context struct {
 	// Environment settings.
 	WorkingDir string    // Current working directory.
 	ProjectDir string    // Path to the project root directory.
-	HiddenDir  string    // Path to the application hidden directory.
+	AppDataDir string    // Path to the application data directory.
+	SrcDir     string    // Path to the source directory.
 	Role       role.Role // User role in the application.
 
 	// Application configuration.
@@ -52,8 +56,17 @@ func BuildContext() (*Context, error) {
 	}
 	context.ProjectDir = projectDir
 
-	// Set application hidden directory path.
-	context.HiddenDir = filepath.Join(context.ProjectDir, HIDDEN_DIR_NAME)
+	// Set application data directory path.
+	context.AppDataDir = filepath.Join(
+		context.ProjectDir,
+		APP_DATA_DIR_NAME,
+	)
+
+	// Set source directory path.
+	context.SrcDir = filepath.Join(
+		context.ProjectDir,
+		SRC_DIR_NAME,
+	)
 
 	// Determine user role.
 	userRole, err := role.GetRole(context.ProjectDir)
