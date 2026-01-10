@@ -42,7 +42,7 @@ func GetUserAssignmentDir(
 	appCtx *app.Context,
 	assignmentName string,
 ) (string, error) {
-	userWorkspaceDir, err := workspace.GetUserWorkspaceDir(*appCtx)
+	userWorkspaceDir, err := workspace.GetUserWorkspaceDir(appCtx)
 	if err != nil {
 		return "", fmt.Errorf("get user assignment dir: %w", err)
 	}
@@ -57,7 +57,7 @@ func GetPrototypeAssignmentDir(
 	assignmentName string,
 ) string {
 	return filepath.Join(
-		workspace.GetPrototypeWorkspaceDir(*appCtx),
+		workspace.GetPrototypeWorkspaceDir(appCtx),
 		assignmentName,
 	)
 }

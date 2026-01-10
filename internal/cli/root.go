@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/TypingHare/course-sync/internal/cli/assignment"
 	"github.com/spf13/cobra"
 )
 
@@ -11,7 +12,7 @@ func Cmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "csync",
 		Short: "Course Sync (csync)",
-		Long: strings.Trim(`
+		Long: strings.TrimSpace(`
 Course Sync helps students and teachers synchronize course materials using Git,
 without requiring a central server.
 
@@ -31,7 +32,7 @@ any server-side infrastructure.
 
 Future versions will incorporate asymmetric encryption to protect application-
 generated files and prevent tampering with submissions and metadata.
-        `, "\n "),
+        `),
 		Version: "2026.1",
 	}
 
@@ -52,8 +53,9 @@ generated files and prevent tampering with submissions and metadata.
 	)
 
 	cmd.AddCommand(
-		ContextCmd(*appCtx),
+		ContextCmd(appCtx),
 		PathCmd(appCtx),
+		assignment.AssignmentCmd(appCtx),
 	)
 
 	return cmd

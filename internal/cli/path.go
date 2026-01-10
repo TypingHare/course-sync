@@ -20,7 +20,7 @@ func PathCmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "path",
 		Short: "Display application related paths",
-		Long: strings.Trim(`
+		Long: strings.TrimSpace(`
 Course Sync uses a small set of well-defined files and directories to store
 application data. This command displays the resolved paths to those locations
 within the current project.
@@ -43,7 +43,7 @@ Key paths include:
     files.
 
 Use the flags below to display the paths to individual files or directories.
-        `, "\n "),
+        `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if shouldDisplayProjectRootDir {
 				cmd.Println(appCtx.ProjectDir)
@@ -52,7 +52,7 @@ Use the flags below to display the paths to individual files or directories.
 			} else if shouldDisplaySourceDir {
 				cmd.Println(appCtx.SrcDir)
 			} else if shouldDisplayUserWorkspaceDir {
-				userWorkspaceDir, err := workspace.GetUserWorkspaceDir(*appCtx)
+				userWorkspaceDir, err := workspace.GetUserWorkspaceDir(appCtx)
 				if err != nil {
 					return err
 				}
