@@ -27,7 +27,7 @@ type Context struct {
 	// Environment settings.
 	WorkingDir string         // Current working directory.
 	ProjectDir string         // Path to the project root directory.
-	HiddenDir  string         // Path to the Course Sync hidden directory.
+	HiddenDir  string         // Path to the application hidden directory.
 	Config     *config.Config // Application configuration.
 	Role       role.Role      // User role in the application.
 }
@@ -50,7 +50,7 @@ func BuildContext() (*Context, error) {
 	}
 	context.ProjectDir = projectDir
 
-	// Set hidden directory path.
+	// Set application hidden directory path.
 	context.HiddenDir = filepath.Join(context.ProjectDir, HIDDEN_DIR_NAME)
 
 	// Load configuration.
