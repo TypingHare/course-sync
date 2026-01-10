@@ -2,8 +2,8 @@ package student
 
 // Student represents a student with their basic information.
 type Student struct {
-	// Id is the unique identifier for the student.
-	Id int `mapstructure:"id"`
+	// ID is the unique identifier for the student.
+	ID int `mapstructure:"id"`
 
 	// Name is the full name of the student.
 	Name string `mapstructure:"name"`
