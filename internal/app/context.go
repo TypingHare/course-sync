@@ -18,9 +18,6 @@ const APP_DATA_DIR_NAME = ".csync"
 // SRC_DIR_NAME is the name of the source directory within the project.
 const SRC_DIR_NAME = "src"
 
-// Singleton application context.
-var context *Context
-
 // Context holds the context for the Course Sync application.
 type Context struct {
 	// CLI options (flags).
@@ -40,7 +37,7 @@ type Context struct {
 
 // BuildContext initializes and returns the application context.
 func BuildContext() (*Context, error) {
-	context = &Context{}
+	context := &Context{}
 
 	// Resolve working directory.
 	workingDir, err := os.Getwd()
@@ -78,12 +75,23 @@ func BuildContext() (*Context, error) {
 	return context, nil
 }
 
+// GetRelPath converts an absolute path to a path relative to the project
+// directory.
+func (ctx *Context) GetRelPath(absPath string) (string, error) {
+	relPath, err := filepath.Rel(ctx.ProjectDir, absPath)
+	if err != nil {
+		return "", err
+	}
+
+	return relPath, nil
+}
+
 // GetConfig retrieves the application configuration, loading it from the Config
 // file if necessary.
 func (ctx *Context) GetConfig() *config.Config {
 	if ctx.config == nil {
 		config, _ := jsonstore.ReadJSONFile[config.Config](CONFIG_FILE_NAME)
-		context.config = &config
+		ctx.config = &config
 	}
 
 	return ctx.config
