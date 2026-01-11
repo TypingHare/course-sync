@@ -17,7 +17,7 @@ func ShellDeleteDir(appCtx *app.Context, absDir string) error {
 		appCtx,
 		[]string{"rm", "-rf", absDir},
 		fmt.Sprintf("Deleting directory %q...", relDir),
-		fmt.Sprintf("Directory %q deleted.", relDir),
+		fmt.Sprintf("Deleted directory %q.", relDir),
 		fmt.Sprintf("Failed to delete directory %q.", relDir),
 	)
 
@@ -37,7 +37,7 @@ func ShellEnsureDir(appCtx *app.Context, absDir string) error {
 		appCtx,
 		[]string{"mkdir", "-p", absDir},
 		fmt.Sprintf("Creating directory %q...", relDir),
-		fmt.Sprintf("Directory %q created.", relDir),
+		fmt.Sprintf("Created directory %q.", relDir),
 		fmt.Sprintf("Failed to create directory %q.", relDir),
 	)
 
@@ -69,7 +69,7 @@ func ShellCopyDir(
 			relSrcDir,
 			relDestDir,
 		),
-		fmt.Sprintf("Directory copied from %q to %q.", relSrcDir, relDestDir),
+		fmt.Sprintf("Copied directory from %q to %q.", relSrcDir, relDestDir),
 		fmt.Sprintf(
 			"Failed to copy directory from %q to %q.",
 			relSrcDir,

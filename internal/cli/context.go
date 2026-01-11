@@ -26,7 +26,7 @@ and therefore not shown here. To view or manage configuration values, use the
 			cmd.Printf("quiet = %s\n", strconv.FormatBool(appCtx.Quiet))
 			cmd.Printf("working directory = %s\n", appCtx.WorkingDir)
 			cmd.Printf("project directory = %s\n", appCtx.ProjectDir)
-			cmd.Printf("app data directory = %s\n", appCtx.AppDataDir)
+			cmd.Printf("application data directory = %s\n", appCtx.AppDataDir)
 			cmd.Printf("source directory = %s\n", appCtx.SrcDir)
 			cmd.Printf("user role = %s\n", string(appCtx.Role))
 		},

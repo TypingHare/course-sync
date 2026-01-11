@@ -12,7 +12,7 @@ import (
 // Configuration file name.
 const CONFIG_FILE_NAME = "config.json"
 
-// Hidden directory name.
+// Application data directory name.
 const APP_DATA_DIR_NAME = ".csync"
 
 // SRC_DIR_NAME is the name of the source directory within the project.
