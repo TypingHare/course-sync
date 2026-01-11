@@ -13,6 +13,8 @@ func ContextCmd(appCtx *app.Context) *cobra.Command {
 		Use:   "context",
 		Short: "Display CLI contexts",
 		Long: strings.TrimSpace(`
+Display Course Sync CLI contexts.
+
 Course Sync maintains a set of contexts that influence command behavior and
 output. This command displays the current runtime context, including global CLI
 options and environment-derived settings.

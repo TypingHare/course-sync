@@ -13,6 +13,7 @@ var (
 	shouldDisplayProjectRootDir        bool
 	shouldDisplayAppDataDir            bool
 	shouldDisplaySourceDir             bool
+	shouldDisplayDocsDir               bool
 	shouldDisplayPrototypeWorkspaceDir bool
 	shouldDisplayUserWorkspaceDir      bool
 )
@@ -22,6 +23,8 @@ func PathCmd(appCtx *app.Context) *cobra.Command {
 		Use:   "path",
 		Short: "Display application related paths",
 		Long: strings.TrimSpace(`
+Display Course Sync application related paths.
+
 Course Sync uses a small set of well-defined files and directories to store
 application data. This command displays the resolved paths to those locations
 within the current project.
@@ -39,7 +42,14 @@ Key paths include:
   - Source directory  
     The directory containing all course source files.
 
-  - User workspace directory  
+  - Documentation (docs) directory
+    The directory containing all documentation files.
+
+  - Prototype workspace directory
+    A subdirectory of the source directory that holds prototype workspace
+    files.
+
+  - User workspace directory
     A subdirectory of the source directory that holds user-specific workspace
     files.
 
@@ -52,6 +62,8 @@ Use the flags below to display the paths to individual files or directories.
 				cmd.Println(appCtx.AppDataDir)
 			} else if shouldDisplaySourceDir {
 				cmd.Println(appCtx.SrcDir)
+			} else if shouldDisplayDocsDir {
+				cmd.Println(appCtx.DocsDir)
 			} else if shouldDisplayPrototypeWorkspaceDir {
 				cmd.Println(workspace.GetPrototypeWorkspaceDir(appCtx))
 			} else if shouldDisplayUserWorkspaceDir {
@@ -85,6 +97,12 @@ Use the flags below to display the paths to individual files or directories.
 		&shouldDisplaySourceDir,
 		"source", "s", false,
 		"display source directory path",
+	)
+
+	cmd.Flags().BoolVarP(
+		&shouldDisplayDocsDir,
+		"docs", "d", false,
+		"display documentation directory path",
 	)
 
 	cmd.Flags().BoolVarP(

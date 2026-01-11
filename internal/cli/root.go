@@ -5,6 +5,7 @@ import (
 
 	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/TypingHare/course-sync/internal/cli/assignment"
+	"github.com/TypingHare/course-sync/internal/cli/doc"
 	"github.com/spf13/cobra"
 )
 
@@ -56,6 +57,7 @@ generated files and prevent tampering with submissions and metadata.
 		ContextCmd(appCtx),
 		PathCmd(appCtx),
 		assignment.Cmd(appCtx),
+		doc.Cmd(appCtx),
 	)
 
 	return cmd
