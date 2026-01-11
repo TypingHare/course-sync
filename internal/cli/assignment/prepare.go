@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var shouldForciblyPrepare bool
+var shouldForcePrepare bool
 
 func prepareCmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
@@ -47,13 +47,13 @@ the --force flag is specified.
 			return assignment.PrepareAssignment(
 				appCtx,
 				args[0],
-				shouldForciblyPrepare,
+				shouldForcePrepare,
 			)
 		},
 	}
 
 	cmd.Flags().BoolVarP(
-		&shouldForciblyPrepare,
+		&shouldForcePrepare,
 		"force", "f", false,
 		"re-prepare even if the user assignment directory "+
 			"already exists",
