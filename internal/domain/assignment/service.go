@@ -6,6 +6,8 @@ import (
 
 	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/TypingHare/course-sync/internal/domain/workspace"
+	"github.com/TypingHare/course-sync/internal/infra/exec"
+	"github.com/TypingHare/course-sync/internal/infra/fs"
 	"github.com/TypingHare/course-sync/internal/infra/jsonstore"
 )
 
@@ -50,8 +52,8 @@ func GetUserAssignmentDir(
 	return filepath.Join(userWorkspaceDir, assignmentName), nil
 }
 
-// GetPrototypeAssignmentDir returns the path to the prototype directory for
-// the specified assignment.
+// GetPrototypeAssignmentDir returns the path to the prototype directory for the
+// specified assignment.
 func GetPrototypeAssignmentDir(
 	appCtx *app.Context,
 	assignmentName string,
@@ -60,4 +62,86 @@ func GetPrototypeAssignmentDir(
 		workspace.GetPrototypeWorkspaceDir(appCtx),
 		assignmentName,
 	)
+}
+
+// PrepareAssignment prepares the assignment environment by copying the
+// prototype assignment to the user's assignment directory. If 'force' is true,
+// it will overwrite any existing user assignment directory.
+func PrepareAssignment(
+	appCtx *app.Context,
+	assignmentName string,
+	force bool,
+) error {
+	// Find the assignment by name.
+	assignments, err := GetAssignments(appCtx)
+	if err != nil {
+		return fmt.Errorf("prepare assignment: %w", err)
+	}
+
+	assignment := FindAssignmentByName(assignments, assignmentName)
+	if assignment == nil {
+		return fmt.Errorf("assignment %q not found", assignmentName)
+	}
+
+	// Check if the prototype assignment directory exists.
+	prototypeAssignmentDir := GetPrototypeAssignmentDir(appCtx, assignmentName)
+	proptotypeAssignmentDirExists, err := fs.DirExists(prototypeAssignmentDir)
+	if err != nil {
+		return fmt.Errorf("check prototype assignment directory: %w", err)
+	}
+	if !proptotypeAssignmentDirExists {
+		return fmt.Errorf(
+			"prototype assignment directory %q does not exist",
+			prototypeAssignmentDir,
+		)
+	}
+
+	// Check if the user assignment directory already exists.
+	userAssignmentDir, err := GetUserAssignmentDir(appCtx, assignmentName)
+	if err != nil {
+		return fmt.Errorf("get user assignment directory: %w", err)
+	}
+
+	// If not forcing, check if the user assignment directory already exists.
+	if !force {
+		userAssignmentDirExists, err := fs.DirExists(userAssignmentDir)
+		if err != nil {
+			return fmt.Errorf("check user assignment directory: %w", err)
+		}
+
+		if userAssignmentDirExists {
+			return fmt.Errorf(
+				"user assignment directory %q already exists",
+				assignmentName,
+			)
+		}
+	}
+
+	// Delete the existing user assignment directory if forcing.
+	if force {
+		err = exec.ShellDeleteDir(appCtx, userAssignmentDir)
+		if err != nil {
+			return fmt.Errorf(
+				"delete user assignment directory: %w",
+				err,
+			)
+		}
+	}
+
+	// Ensure the parent directory of the user assignment directory exists.
+	err = exec.ShellEnsureDir(appCtx, filepath.Dir(userAssignmentDir))
+	if err != nil {
+		return fmt.Errorf(
+			"ensure user assignment parent directory: %w",
+			err,
+		)
+	}
+
+	// Copy the prototype assignment to the user assignment directory.
+	err = exec.ShellCopyDir(appCtx, prototypeAssignmentDir, userAssignmentDir)
+	if err != nil {
+		return fmt.Errorf("copy prototype assignment: %w", err)
+	}
+
+	return nil
 }
