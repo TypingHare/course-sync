@@ -91,25 +91,28 @@ func (s *Spinner) Start() {
 			ticker := time.NewTicker(s.delay)
 			defer ticker.Stop()
 
+			s.PrintMessage(s.frames[0])
+
 			numFrames := len(s.frames)
-			i := 0
+			i := 1
 
 			for {
 				select {
 				case <-s.stopChan:
 					return
 				case <-ticker.C:
-					if i > 0 {
-						s.ClearMessage()
-					}
-
-					frame := s.frames[i%numFrames]
-					fmt.Fprintf(s.out, "%c  %s", frame, s.message)
+					s.ClearMessage()
+					s.PrintMessage(s.frames[i%numFrames])
 					i++
 				}
 			}
 		}()
 	})
+}
+
+// PrintMessage prints the spinner message prefixed by the given frame.
+func (s *Spinner) PrintMessage(frame rune) {
+	fmt.Fprintf(s.out, "%c  %s", frame, s.message)
 }
 
 // Stop stops the spinner animation and waits for it to terminate.
