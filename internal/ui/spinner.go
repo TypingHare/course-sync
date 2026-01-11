@@ -51,7 +51,7 @@ func NewSpinner(out io.Writer, message string) *Spinner {
 		message:  message,
 		numLines: strings.Count(message, "\n") + 1,
 		frames:   []rune{'⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'},
-		delay:    100 * time.Millisecond,
+		delay:    60 * time.Millisecond,
 		stopChan: make(chan struct{}),
 		doneChan: make(chan struct{}),
 	}
