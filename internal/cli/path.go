@@ -68,33 +68,25 @@ Use the flags below to display the paths to individual files or directories.
 
 	cmd.Flags().BoolVarP(
 		&shouldDisplayProjectRootDir,
-		"project-root",
-		"p",
-		false,
+		"project-root", "p", false,
 		"display project root directory path",
 	)
 
 	cmd.Flags().BoolVarP(
 		&shouldDisplayAppDataDir,
-		"app-data",
-		"a",
-		false,
+		"app-data", "a", false,
 		"display application data directory path",
 	)
 
 	cmd.Flags().BoolVarP(
 		&shouldDisplaySourceDir,
-		"source",
-		"s",
-		false,
+		"source", "s", false,
 		"display source directory path",
 	)
 
 	cmd.Flags().BoolVarP(
 		&shouldDisplayUserWorkspaceDir,
-		"user-workspace",
-		"u",
-		false,
+		"user-workspace", "u", false,
 		"display user workspace directory path",
 	)
 
