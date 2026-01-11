@@ -10,16 +10,13 @@ import (
 
 // GitGetUsername retrieves the Git user name from the Git configuration.
 func GitGetUsername(appCtx *app.Context) (string, error) {
-	commandTask, err := exec.NewCommandTask(
+	commandTask := exec.NewCommandTask(
 		appCtx,
 		[]string{"git", "config", "--get", "user.name"},
 		"Retrieving Git user name...",
 		"Retrieved Git user name.",
 		"Failed to retrieve Git user name.",
 	)
-	if err != nil {
-		return "", err
-	}
 
 	result, err := commandTask.Start()
 	if err != nil {

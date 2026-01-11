@@ -49,20 +49,23 @@ func NewCommandTask(
 	ongoingMessage string,
 	doneMessage string,
 	errorMessage string,
-) (*CommandTask, error) {
+) *CommandTask {
+	var command string
 	if len(args) == 0 {
-		return nil, fmt.Errorf("no command provided")
+		command = ""
+	} else {
+		command = args[0]
 	}
 
 	return &CommandTask{
-		command:        args[0],
+		command:        command,
 		args:           args[1:],
 		ongoingMessage: ongoingMessage,
 		doneMessage:    doneMessage,
 		errorMessage:   errorMessage,
 		verbose:        appCtx.Verbose,
 		quiet:          appCtx.Quiet,
-	}, nil
+	}
 }
 
 func (t *CommandTask) Start() (CommandTaskResult, error) {
