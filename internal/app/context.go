@@ -8,6 +8,8 @@ import (
 	"github.com/TypingHare/course-sync/internal/domain/role"
 	"github.com/TypingHare/course-sync/internal/infra/config"
 	"github.com/TypingHare/course-sync/internal/infra/jsonstore"
+
+	"github.com/TypingHare/course-sync/internal/infra/fs"
 )
 
 // Configuration file name.
@@ -21,6 +23,12 @@ const SRC_DIR_NAME = "src"
 
 // DOCS_FILE_NAME is the name of the documentation file.
 const DOCS_DIR_NAME = "docs"
+
+// Master private key file name inside the application directory.
+const MASTER_PRIVATE_KEY_FILE_NAME = "master"
+
+// Master public key file name inside the application directory.
+const MASTER_PUBLIC_KEY_FILE_NAME = "master.pub"
 
 // Context holds the context for the Course Sync application.
 type Context struct {
@@ -77,13 +85,30 @@ func BuildContext() (*Context, error) {
 	)
 
 	// Determine user role.
-	userRole, err := role.GetRole(ctx.ProjectDir)
+	userRole, err := GetRole(ctx.ProjectDir)
 	if err != nil {
 		return nil, err
 	}
 	ctx.Role = userRole
 
 	return ctx, nil
+}
+
+// GetRole determines the current user role based on the presence of the master
+// private key file, which is stored in the application data directory.
+func GetRole(appDataDir string) (role.Role, error) {
+	isMaster, err := fs.FileExists(
+		filepath.Join(appDataDir, MASTER_PRIVATE_KEY_FILE_NAME),
+	)
+	if err != nil {
+		return "", err
+	}
+
+	if isMaster {
+		return role.RoleMaster, nil
+	} else {
+		return role.RoleStudent, nil
+	}
 }
 
 // GetRelPath converts an absolute path to a path relative to the project
