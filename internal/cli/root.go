@@ -55,7 +55,7 @@ generated files and prevent tampering with submissions and metadata.
 	cmd.AddCommand(
 		ContextCmd(appCtx),
 		PathCmd(appCtx),
-		assignment.AssignmentCmd(appCtx),
+		assignment.Cmd(appCtx),
 	)
 
 	return cmd

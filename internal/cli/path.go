@@ -10,10 +10,11 @@ import (
 )
 
 var (
-	shouldDisplayProjectRootDir   bool
-	shouldDisplayAppDataDir       bool
-	shouldDisplaySourceDir        bool
-	shouldDisplayUserWorkspaceDir bool
+	shouldDisplayProjectRootDir        bool
+	shouldDisplayAppDataDir            bool
+	shouldDisplaySourceDir             bool
+	shouldDisplayPrototypeWorkspaceDir bool
+	shouldDisplayUserWorkspaceDir      bool
 )
 
 func PathCmd(appCtx *app.Context) *cobra.Command {
@@ -51,6 +52,8 @@ Use the flags below to display the paths to individual files or directories.
 				cmd.Println(appCtx.AppDataDir)
 			} else if shouldDisplaySourceDir {
 				cmd.Println(appCtx.SrcDir)
+			} else if shouldDisplayPrototypeWorkspaceDir {
+				cmd.Println(workspace.GetPrototypeWorkspaceDir(appCtx))
 			} else if shouldDisplayUserWorkspaceDir {
 				userWorkspaceDir, err := workspace.GetUserWorkspaceDir(appCtx)
 				if err != nil {
@@ -68,7 +71,7 @@ Use the flags below to display the paths to individual files or directories.
 
 	cmd.Flags().BoolVarP(
 		&shouldDisplayProjectRootDir,
-		"project-root", "p", false,
+		"project", "p", false,
 		"display project root directory path",
 	)
 
@@ -82,6 +85,12 @@ Use the flags below to display the paths to individual files or directories.
 		&shouldDisplaySourceDir,
 		"source", "s", false,
 		"display source directory path",
+	)
+
+	cmd.Flags().BoolVarP(
+		&shouldDisplayPrototypeWorkspaceDir,
+		"prototype-workspace", "o", false,
+		"display prototype workspace directory path",
 	)
 
 	cmd.Flags().BoolVarP(

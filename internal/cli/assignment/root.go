@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func AssignmentCmd(appCtx *app.Context) *cobra.Command {
+func Cmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "assignment",
 		Short: "Manage assignments",
