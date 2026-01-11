@@ -21,14 +21,14 @@ func GetAssignments(appCtx *app.Context) ([]Assignment, error) {
 		filepath.Join(appCtx.AppDataDir, ASSIGNMENTS_FILE_NAME),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read assignments: %w", err)
+		return nil, fmt.Errorf("failed to retrieve assignments: %w", err)
 	}
 
 	return assignments, nil
 }
 
 // FindAssignmentByName searches for an assignment by its name in the provided
-// slice.
+// slice. It returns a pointer to the Assignment if found, or nil if not found.
 func FindAssignmentByName(assignments []Assignment, name string) *Assignment {
 	for i := range assignments {
 		if assignments[i].Name == name {
