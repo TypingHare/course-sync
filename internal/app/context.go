@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -18,6 +19,9 @@ const APP_DATA_DIR_NAME = ".csync"
 // SRC_DIR_NAME is the name of the source directory within the project.
 const SRC_DIR_NAME = "src"
 
+// DOCS_FILE_NAME is the name of the documentation file.
+const DOCS_DIR_NAME = "docs"
+
 // Context holds the context for the Course Sync application.
 type Context struct {
 	// CLI options (flags).
@@ -26,9 +30,10 @@ type Context struct {
 
 	// Environment settings.
 	WorkingDir string    // Current working directory.
-	ProjectDir string    // Path to the project root directory.
-	AppDataDir string    // Path to the application data directory.
-	SrcDir     string    // Path to the source directory.
+	ProjectDir string    // Absolute path to the project root directory.
+	AppDataDir string    // Absolute path to the application data directory.
+	SrcDir     string    // Absolute path to the source directory.
+	DocsDir    string    // Absolute path to the documentation directory.
 	Role       role.Role // User role in the application.
 
 	// Application configuration.
@@ -37,42 +42,48 @@ type Context struct {
 
 // BuildContext initializes and returns the application context.
 func BuildContext() (*Context, error) {
-	context := &Context{}
+	ctx := &Context{}
 
 	// Resolve working directory.
 	workingDir, err := os.Getwd()
 	if err != nil {
 		return nil, err
 	}
-	context.WorkingDir = workingDir
+	ctx.WorkingDir = workingDir
 
 	// Find project directory.
 	projectDir, err := FindProjectDir(workingDir)
 	if err != nil {
 		return nil, err
 	}
-	context.ProjectDir = projectDir
+	ctx.ProjectDir = projectDir
 
 	// Set application data directory path.
-	context.AppDataDir = filepath.Join(
-		context.ProjectDir,
+	ctx.AppDataDir = filepath.Join(
+		ctx.ProjectDir,
 		APP_DATA_DIR_NAME,
 	)
 
 	// Set source directory path.
-	context.SrcDir = filepath.Join(
-		context.ProjectDir,
+	ctx.SrcDir = filepath.Join(
+		ctx.ProjectDir,
 		SRC_DIR_NAME,
 	)
 
+	// Set docs directory path.
+	ctx.DocsDir = filepath.Join(
+		ctx.ProjectDir,
+		DOCS_DIR_NAME,
+	)
+
 	// Determine user role.
-	userRole, err := role.GetRole(context.ProjectDir)
+	userRole, err := role.GetRole(ctx.ProjectDir)
 	if err != nil {
 		return nil, err
 	}
-	context.Role = userRole
+	ctx.Role = userRole
 
-	return context, nil
+	return ctx, nil
 }
 
 // GetRelPath converts an absolute path to a path relative to the project
@@ -80,7 +91,7 @@ func BuildContext() (*Context, error) {
 func (ctx *Context) GetRelPath(absPath string) (string, error) {
 	relPath, err := filepath.Rel(ctx.ProjectDir, absPath)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("can't make %q to %q", absPath, ctx.ProjectDir)
 	}
 
 	return relPath, nil
