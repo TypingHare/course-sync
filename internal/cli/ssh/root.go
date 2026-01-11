@@ -11,7 +11,12 @@ func Cmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ssh",
 		Short: "Manage SSH",
-		Long:  strings.TrimSpace(``),
+		Long: strings.TrimSpace(`
+Manage SSH keys used by Course Sync.
+
+This command provides access to ssh-related actions, such as generating new
+master SSH keys.
+        `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return nil
 		},

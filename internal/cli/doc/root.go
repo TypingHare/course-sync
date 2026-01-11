@@ -10,7 +10,7 @@ import (
 func Cmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "doc",
-		Short: "Manages documentation",
+		Short: "Manage documentation",
 		Long: strings.TrimSpace(`
 Manage course documentation.
 
