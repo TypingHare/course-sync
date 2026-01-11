@@ -11,7 +11,7 @@ import (
 )
 
 // PROTOTYPE_WORKSPACE is the name of the prototype workspace directory.
-const PROTOTYPE_WORKSPACE = "prototype"
+const PROTOTYPE_WORKSPACE = "[prototype]"
 
 // GetUserWorkspaceDir constructs the path to the user's workspace directory
 // based on the git username and the project directory.
