@@ -60,5 +60,9 @@ generated files and prevent tampering with submissions and metadata.
 		doc.Cmd(appCtx),
 	)
 
+	// Stop Cobra handles the errors.
+	cmd.SilenceUsage = true
+	cmd.SilenceErrors = true
+
 	return cmd
 }
