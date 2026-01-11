@@ -2,6 +2,7 @@ package assignment
 
 import (
 	"os"
+	"strings"
 
 	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/TypingHare/course-sync/internal/domain/assignment"
@@ -9,11 +10,24 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var shouldDisplayAll bool
+
 func ListCmd(appCtx *app.Context) *cobra.Command {
-	return &cobra.Command{
+	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all assignments",
+		Long: strings.TrimSpace(`
+List the assignments available in the course.
+
+This command reads assignment information from the assignments.json file in the
+application data directory and displays the results in a table, showing each
+assignment’s name, title, release date, and due date.
+
+By default, only assignments that have not yet been submitted are listed. Use
+the --all flag to include submitted assignments as well.
+        `),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// TODO: Implement filtering based on shouldDisplayAll flag
 			assignments, err := assignment.GetAssignments(appCtx)
 			if err != nil {
 				return err
@@ -35,4 +49,12 @@ func ListCmd(appCtx *app.Context) *cobra.Command {
 			return nil
 		},
 	}
+
+	cmd.Flags().BoolVarP(
+		&shouldDisplayAll,
+		"all", "a", false,
+		"Display all assignments, including submitted ones",
+	)
+
+	return cmd
 }
