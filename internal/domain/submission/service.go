@@ -104,5 +104,8 @@ func AddSubmissionToFile(appCtx *app.Context, submission Submission) error {
 
 	submissions = append(submissions, submission)
 
-	return jsonstore.WriteJSONFile(SUBMISSIONS_FILE_NAME, submissions)
+	return jsonstore.WriteJSONFile(
+		filepath.Join(appCtx.AppDataDir, SUBMISSIONS_FILE_NAME),
+		submissions,
+	)
 }

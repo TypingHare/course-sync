@@ -67,5 +67,8 @@ func AppendGradeHistory(appCtx *app.Context, grade Grade) error {
 
 	grades = append(grades, grade)
 
-	return jsonstore.WriteJSONFile(GRADES_FILE_NAME, grades)
+	return jsonstore.WriteJSONFile(
+		filepath.Join(appCtx.AppDataDir, GRADES_FILE_NAME),
+		grades,
+	)
 }
