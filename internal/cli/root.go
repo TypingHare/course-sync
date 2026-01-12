@@ -7,6 +7,7 @@ import (
 	"github.com/TypingHare/course-sync/internal/cli/assignment"
 	"github.com/TypingHare/course-sync/internal/cli/doc"
 	"github.com/TypingHare/course-sync/internal/cli/ssh"
+	"github.com/TypingHare/course-sync/internal/cli/submission"
 	"github.com/spf13/cobra"
 )
 
@@ -58,8 +59,9 @@ generated files and prevent tampering with submissions and metadata.
 		ContextCmd(appCtx),
 		PathCmd(appCtx),
 		ssh.Cmd(appCtx),
-		assignment.Cmd(appCtx),
 		doc.Cmd(appCtx),
+		assignment.Cmd(appCtx),
+		submission.Cmd(appCtx),
 	)
 
 	// Stop Cobra handles the errors.
