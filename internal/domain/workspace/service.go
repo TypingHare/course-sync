@@ -3,11 +3,10 @@ package workspace
 import (
 	"fmt"
 	"path/filepath"
-	"strings"
 
 	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/TypingHare/course-sync/internal/domain/student"
 	"github.com/TypingHare/course-sync/internal/infra/git"
-	"github.com/iancoleman/strcase"
 )
 
 // PROTOTYPE_WORKSPACE is the name of the prototype workspace directory.
@@ -21,12 +20,7 @@ func GetUserWorkspaceDir(appCtx *app.Context) (string, error) {
 		return "", fmt.Errorf("get git username: %w", err)
 	}
 
-	workspaceDirName := strings.ReplaceAll(
-		strcase.ToSnake(gitUsername),
-		"_",
-		"-",
-	)
-
+	workspaceDirName := student.GetStudentDirName(gitUsername)
 	return filepath.Join(appCtx.SrcDir, workspaceDirName), nil
 }
 

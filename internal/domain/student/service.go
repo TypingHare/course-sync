@@ -1,7 +1,14 @@
 package student
 
-// Student represents a student in the system.
-const STUDENTS_FILE_NAME = "students.json"
+import (
+	"path/filepath"
+	"strings"
+
+	"github.com/iancoleman/strcase"
+)
+
+// StudentRepoBaseDir is the base directory for local student repositories.
+const StudentRepoBaseDir = "student-repos/"
 
 // NewStudent creates a new Student instance.
 func NewStudent(
@@ -16,4 +23,16 @@ func NewStudent(
 		Email:         email,
 		RepositoryURL: repositoryURL,
 	}
+}
+
+// GetStudentDirName returns the directory name for a student by converting the
+// student's name to kebab-case.
+func GetStudentDirName(studentName string) string {
+	return strings.ReplaceAll(strcase.ToSnake(studentName), "_", "-")
+}
+
+// GetLocalStudentRepoDir constructs the local path for a student's repository
+// based on the base directory and the student's directory name.
+func GetLocalStudentRepoDir(studentName string) string {
+	return filepath.Join(StudentRepoBaseDir, GetStudentDirName(studentName))
 }
