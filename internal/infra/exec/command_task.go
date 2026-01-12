@@ -68,6 +68,9 @@ func NewCommandTask(
 	}
 }
 
+// Start executes the command task, displaying messages based on its progress
+// and outcome. It returns the result of the command execution and any error
+// encountered.
 func (t *CommandTask) Start() (CommandTaskResult, error) {
 	var appendedCommandStr string
 
@@ -151,4 +154,10 @@ func PrintExternalCommandStderr(stderr string, indentation string) {
 		fmt.Println(indentation + stderrColor(line))
 	}
 	fmt.Println()
+}
+
+func (t *CommandTask) StartE() error {
+	_, err := t.Start()
+
+	return err
 }
