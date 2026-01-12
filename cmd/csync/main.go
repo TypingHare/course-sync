@@ -21,7 +21,7 @@ func main() {
 	if err = cli.Cmd(appCtx).Execute(); err != nil {
 		fmt.Fprintln(
 			os.Stderr,
-			ui.MakeError("Fatal error: failed to "+err.Error()),
+			ui.MakeError("Error: "+err.Error()),
 		)
 		os.Exit(1)
 	}
