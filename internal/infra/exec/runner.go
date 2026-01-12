@@ -60,5 +60,9 @@ func RunCommand(
 	}
 
 	return -1, stdout, stderr,
-		fmt.Errorf("command task %q failed to start: %w", name, err)
+		fmt.Errorf(
+			"command task %q failed to start: %w",
+			JoinCommand(name, args),
+			err,
+		)
 }
