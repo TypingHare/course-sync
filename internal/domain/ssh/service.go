@@ -14,7 +14,10 @@ import (
 // pair. Then, it uses the ssh-keygen command to create an ed25519 key pair
 // without a passphrase.
 func GenerateKeyPair(appCtx *app.Context, privateKeyFile string) error {
-	exec.ShellEnsureDir(appCtx, filepath.Dir(privateKeyFile))
+	err := exec.ShellEnsureDir(appCtx, filepath.Dir(privateKeyFile))
+	if err != nil {
+		return fmt.Errorf("ensure parent directory exists: %w", err)
+	}
 
 	commandTask := exec.NewCommandTask(
 		appCtx,
@@ -32,7 +35,7 @@ func GenerateKeyPair(appCtx *app.Context, privateKeyFile string) error {
 		"Failed to generate SSH key pair.",
 	)
 
-	_, err := commandTask.Start()
+	_, err = commandTask.Start()
 
 	return err
 }
