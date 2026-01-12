@@ -19,7 +19,7 @@ func GenerateKeyPair(appCtx *app.Context, privateKeyFile string) error {
 		return fmt.Errorf("ensure parent directory exists: %w", err)
 	}
 
-	commandTask := exec.NewCommandTask(
+	return exec.NewCommandTask(
 		appCtx,
 		[]string{
 			"ssh-keygen",
@@ -33,32 +33,30 @@ func GenerateKeyPair(appCtx *app.Context, privateKeyFile string) error {
 		"Generating new SSH key pair...",
 		"Generated SSH key pair successfully.",
 		"Failed to generate SSH key pair.",
-	)
-
-	_, err = commandTask.Start()
-
-	return err
+	).StartE()
 }
 
-// GenerateMasterKeyPair generates a new master SSH key pair and saves it to the
-// application directory.
-func GenerateMasterKeyPair(appCtx *app.Context, force bool) error {
-	masterPrivateKeyFile := filepath.Join(
+// GenerateInstructorKeyPair generates a new instructor SSH key pair and saves
+// it to the application directory.
+func GenerateInstructorKeyPair(appCtx *app.Context, force bool) error {
+	instructorPrivateKeyFile := filepath.Join(
 		appCtx.AppDataDir,
-		app.MASTER_PRIVATE_KEY_FILE_NAME,
+		app.INSTRUCTOR_PRIVATE_KEY_FILE_NAME,
 	)
 
-	masterPrivateKeyFileExists, err := fs.FileExists(masterPrivateKeyFile)
+	instructorPrivateKeyFileExists, err := fs.FileExists(
+		instructorPrivateKeyFile,
+	)
 	if err != nil {
 		return err
 	}
 
-	if masterPrivateKeyFileExists && !force {
+	if instructorPrivateKeyFileExists && !force {
 		return fmt.Errorf(
-			"master private key file already exists at %s",
-			masterPrivateKeyFile,
+			"instructor private key file already exists at %s",
+			instructorPrivateKeyFile,
 		)
 	}
 
-	return GenerateKeyPair(appCtx, masterPrivateKeyFile)
+	return GenerateKeyPair(appCtx, instructorPrivateKeyFile)
 }

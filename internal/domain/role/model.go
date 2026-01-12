@@ -6,5 +6,5 @@ type Role string
 // Defined user roles.
 const (
 	RoleStudent Role = "student"
-	RoleMaster  Role = "master"
+	Roleinstructor  Role = "instructor"
 )

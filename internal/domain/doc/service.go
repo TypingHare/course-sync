@@ -81,15 +81,11 @@ func OpenDoc(appCtx *app.Context, docAbsFile string) error {
 		return err
 	}
 
-	commandTask := exec.NewCommandTask(
+	return exec.NewCommandTask(
 		appCtx,
 		args,
 		fmt.Sprintf("Opening documentation at %q...", docRelPath),
 		fmt.Sprintf("Opened documentation at %q.", docRelPath),
 		fmt.Sprintf("Failed to opened documentation at %q.", docRelPath),
-	)
-
-	_, err = commandTask.Start()
-
-	return err
+	).StartE()
 }

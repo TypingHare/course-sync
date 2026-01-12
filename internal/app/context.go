@@ -25,11 +25,11 @@ const SRC_DIR_NAME = "src"
 // DOCS_FILE_NAME is the name of the documentation file.
 const DOCS_DIR_NAME = "docs"
 
-// Master private key file name inside the application directory.
-const MASTER_PRIVATE_KEY_FILE_NAME = "master"
+// instructor private key file name inside the application directory.
+const INSTRUCTOR_PRIVATE_KEY_FILE_NAME = "instructor"
 
-// Master public key file name inside the application directory.
-const MASTER_PUBLIC_KEY_FILE_NAME = "master.pub"
+// instructor public key file name inside the application directory.
+const INSTRUCTOR_PUBLIC_KEY_FILE_NAME = "instructor.pub"
 
 // Context holds the context for the Course Sync application.
 type Context struct {
@@ -95,18 +95,19 @@ func BuildContext() (*Context, error) {
 	return ctx, nil
 }
 
-// GetRole determines the current user role based on the presence of the master
-// private key file, which is stored in the application data directory.
+// GetRole determines the current user role based on the presence of the
+// instructor private key file, which is stored in the application data
+// directory.
 func GetRole(appDataDir string) (role.Role, error) {
-	isMaster, err := fs.FileExists(
-		filepath.Join(appDataDir, MASTER_PRIVATE_KEY_FILE_NAME),
+	isinstructor, err := fs.FileExists(
+		filepath.Join(appDataDir, INSTRUCTOR_PRIVATE_KEY_FILE_NAME),
 	)
 	if err != nil {
 		return "", err
 	}
 
-	if isMaster {
-		return role.RoleMaster, nil
+	if isinstructor {
+		return role.Roleinstructor, nil
 	} else {
 		return role.RoleStudent, nil
 	}
@@ -127,8 +128,18 @@ func (ctx *Context) GetRelPath(absPath string) (string, error) {
 // file if necessary.
 func (ctx *Context) GetConfig() (*config.Config, error) {
 	if ctx.config == nil {
+		configFile := filepath.Join(ctx.AppDataDir, CONFIG_FILE_NAME)
+		configFileExists, err := fs.FileExists(configFile)
+		if err != nil {
+			return nil, fmt.Errorf("check config file existence: %w", err)
+		}
+		if !configFileExists {
+			ctx.config = config.GetDefault()
+			return ctx.config, nil
+		}
+
 		config, err := jsonstore.ReadJSONFile[config.Config](
-			filepath.Join(ctx.AppDataDir, CONFIG_FILE_NAME),
+			configFile,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("read config: %w", err)
@@ -153,7 +164,7 @@ func (ctx *Context) IsStudent() bool {
 	return ctx.Role == role.RoleStudent
 }
 
-// IsMaster checks if the current user role is Master.
-func (ctx *Context) IsMaster() bool {
-	return ctx.Role == role.RoleMaster
+// Isinstructor checks if the current user role is instructor.
+func (ctx *Context) Isinstructor() bool {
+	return ctx.Role == role.Roleinstructor
 }

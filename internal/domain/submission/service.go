@@ -72,17 +72,17 @@ func CreateSubmission(
 		}
 	}
 
-	if err = git.GitAdd(appCtx, userAssignmentDir); err != nil {
+	if err = git.Add(appCtx, userAssignmentDir); err != nil {
 		return nil, fmt.Errorf("git add submission: %w", err)
 	}
 
-	err = git.GitCommit(appCtx, "feat: student submission "+submissionHash)
+	err = git.Commit(appCtx, "feat: student submission "+submissionHash)
 	if err != nil {
 		return nil, fmt.Errorf("git commit submission: %w", err)
 	}
 
 	// Get the latest commit hash.
-	gitCommitHash, err := git.GitRevParseHead(appCtx)
+	gitCommitHash, err := git.RevParseHead(appCtx)
 	if err != nil {
 		return nil, err
 	}

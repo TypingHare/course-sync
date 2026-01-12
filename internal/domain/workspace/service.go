@@ -16,7 +16,7 @@ const PROTOTYPE_WORKSPACE = "[prototype]"
 // GetUserWorkspaceDir constructs the path to the user's workspace directory
 // based on the git username and the project directory.
 func GetUserWorkspaceDir(appCtx *app.Context) (string, error) {
-	gitUsername, err := git.GitGetUsername(appCtx)
+	gitUsername, err := git.GetUsername(appCtx)
 	if err != nil || gitUsername == "" {
 		return "", fmt.Errorf("get git username: %w", err)
 	}

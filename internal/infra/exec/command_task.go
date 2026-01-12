@@ -156,6 +156,8 @@ func PrintExternalCommandStderr(stderr string, indentation string) {
 	fmt.Println()
 }
 
+// StartE is a convenience method that starts the command task and returns only
+// the error, ignoring the result.
 func (t *CommandTask) StartE() error {
 	_, err := t.Start()
 

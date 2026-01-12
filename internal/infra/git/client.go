@@ -8,8 +8,8 @@ import (
 	"github.com/TypingHare/course-sync/internal/infra/exec"
 )
 
-// GitGetUsername retrieves the Git user name from the Git configuration.
-func GitGetUsername(appCtx *app.Context) (string, error) {
+// GetUsername retrieves the Git user name from the Git configuration.
+func GetUsername(appCtx *app.Context) (string, error) {
 	commandTask := exec.NewCommandTask(
 		appCtx,
 		[]string{"git", "config", "--get", "user.name"},
@@ -26,8 +26,8 @@ func GitGetUsername(appCtx *app.Context) (string, error) {
 	return strings.TrimSpace(strings.TrimSpace(result.Stdout)), nil
 }
 
-// GitAdd stages the specified file for commit in Git.
-func GitAdd(appCtx *app.Context, path string) error {
+// Add stages the specified file for commit in Git.
+func Add(appCtx *app.Context, path string) error {
 	return exec.NewCommandTask(
 		appCtx,
 		[]string{"git", "add", path},
@@ -37,8 +37,8 @@ func GitAdd(appCtx *app.Context, path string) error {
 	).StartE()
 }
 
-// GitCommit commits the staged changes to Git with the provided commit message.
-func GitCommit(appCtx *app.Context, message string) error {
+// Commit commits the staged changes to Git with the provided commit message.
+func Commit(appCtx *app.Context, message string) error {
 	return exec.NewCommandTask(
 		appCtx,
 		[]string{"git", "commit", "-m", message},
@@ -48,8 +48,8 @@ func GitCommit(appCtx *app.Context, message string) error {
 	).StartE()
 }
 
-// GitPush pushes the local changes to the remote Git repository.
-func GitPush(appCtx *app.Context) error {
+// Push pushes the local changes to the remote Git repository.
+func Push(appCtx *app.Context) error {
 	return exec.NewCommandTask(
 		appCtx,
 		[]string{"git", "push"},
@@ -59,20 +59,36 @@ func GitPush(appCtx *app.Context) error {
 	).StartE()
 }
 
-// GitPull pulls the latest changes from the remote Git repository.
-func GitPull(appCtx *app.Context) error {
+// Pull pulls the latest changes from the remote Git repository.
+func Pull(appCtx *app.Context, rebase bool) error {
+	args := []string{"git", "pull"}
+	if rebase {
+		args = append(args, "--rebase")
+	}
+
 	return exec.NewCommandTask(
 		appCtx,
-		[]string{"git", "pull"},
+		args,
 		"Pulling changes from remote repository...",
 		"Pulled changes from remote repository.",
 		"Failed to pull changes from remote repository.",
 	).StartE()
 }
 
-// GitRevParseHead retrieves the current Git commit hash (HEAD).
+// Restore restores the specified file to its last committed state in Git.
+func Restore(appCtx *app.Context, path string) error {
+	return exec.NewCommandTask(
+		appCtx,
+		[]string{"git", "restore", path},
+		fmt.Sprintf("Restoring %q...", path),
+		fmt.Sprintf("Restored %q.", path),
+		fmt.Sprintf("Failed to restore %q.", path),
+	).StartE()
+}
+
+// RevParseHead retrieves the current Git commit hash (HEAD).
 // It returns the commit hash as a string.
-func GitRevParseHead(appCtx *app.Context) (string, error) {
+func RevParseHead(appCtx *app.Context) (string, error) {
 	commandTask := exec.NewCommandTask(
 		appCtx,
 		[]string{"git", "rev-parse", "HEAD"},

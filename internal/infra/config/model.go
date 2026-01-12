@@ -7,3 +7,10 @@ type Config struct {
 	// Roster contains a list of students in the course.
 	Roster []student.Student `mapstructure:"roster"`
 }
+
+// GetDefault returns a Config instance with default values.
+func GetDefault() *Config {
+	return &Config{
+		Roster: []student.Student{},
+	}
+}

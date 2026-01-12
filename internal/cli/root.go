@@ -44,22 +44,19 @@ generated files and prevent tampering with submissions and metadata.
 	cmd.SetVersionTemplate("{{.Version}}\n")
 	cmd.PersistentFlags().BoolVarP(
 		&appCtx.Verbose,
-		"verbose",
-		"v",
-		false,
+		"verbose", "v", false,
 		"enable verbose output",
 	)
 	cmd.PersistentFlags().BoolVarP(
 		&appCtx.Quiet,
-		"quiet",
-		"q",
-		false,
+		"quiet", "q", false,
 		"suppress non-error output",
 	)
 
 	cmd.AddCommand(
-		ContextCmd(appCtx),
-		PathCmd(appCtx),
+		contextCmd(appCtx),
+		pathCmd(appCtx),
+		initCmd(appCtx),
 		ssh.Cmd(appCtx),
 		doc.Cmd(appCtx),
 		assignment.Cmd(appCtx),
@@ -67,8 +64,17 @@ generated files and prevent tampering with submissions and metadata.
 		grade.Cmd(appCtx),
 	)
 
-	if appCtx.IsMaster() {
+	if appCtx.Isinstructor() {
 		cmd.AddCommand(student.Cmd(appCtx))
+	}
+
+	if appCtx.IsStudent() {
+		cmd.AddCommand(
+			pullCmd(appCtx),
+			commitCmd(appCtx),
+			pushCmd(appCtx),
+			syncCommand(appCtx),
+		)
 	}
 
 	// Stop Cobra from handling errors.

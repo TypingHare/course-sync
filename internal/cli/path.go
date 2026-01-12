@@ -18,7 +18,7 @@ var (
 	shouldDisplayUserWorkspaceDir      bool
 )
 
-func PathCmd(appCtx *app.Context) *cobra.Command {
+func pathCmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "path",
 		Short: "Display application related paths",

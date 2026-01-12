@@ -15,7 +15,7 @@ func Cmd(appCtx *app.Context) *cobra.Command {
 Manage SSH keys used by Course Sync.
 
 This command provides access to ssh-related actions, such as generating new
-master SSH keys.
+instructor SSH keys.
         `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return nil

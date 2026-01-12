@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func ContextCmd(appCtx *app.Context) *cobra.Command {
+func contextCmd(appCtx *app.Context) *cobra.Command {
 	return &cobra.Command{
 		Use:   "context",
 		Short: "Display CLI contexts",

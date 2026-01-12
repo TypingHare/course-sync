@@ -13,17 +13,13 @@ func ShellDeleteDir(appCtx *app.Context, absDir string) error {
 		return fmt.Errorf("get relative path: %w", err)
 	}
 
-	commandTask := NewCommandTask(
+	return NewCommandTask(
 		appCtx,
 		[]string{"rm", "-rf", absDir},
 		fmt.Sprintf("Deleting directory %q...", relDir),
 		fmt.Sprintf("Deleted directory %q.", relDir),
 		fmt.Sprintf("Failed to delete directory %q.", relDir),
-	)
-
-	_, err = commandTask.Start()
-
-	return err
+	).StartE()
 }
 
 // ShellEnsureDir creates the specified directory using a shell command.
@@ -33,17 +29,13 @@ func ShellEnsureDir(appCtx *app.Context, absDir string) error {
 		return fmt.Errorf("get relative path: %w", err)
 	}
 
-	commandTask := NewCommandTask(
+	return NewCommandTask(
 		appCtx,
 		[]string{"mkdir", "-p", absDir},
 		fmt.Sprintf("Creating directory %q...", relDir),
 		fmt.Sprintf("Created directory %q.", relDir),
 		fmt.Sprintf("Failed to create directory %q.", relDir),
-	)
-
-	_, err = commandTask.Start()
-
-	return err
+	).StartE()
 }
 
 func ShellCopyDir(
@@ -61,7 +53,7 @@ func ShellCopyDir(
 		return fmt.Errorf("get relative destination path: %w", err)
 	}
 
-	commandTask := NewCommandTask(
+	return NewCommandTask(
 		appCtx,
 		[]string{"cp", "-r", absSrcDir, absDestDir},
 		fmt.Sprintf(
@@ -75,9 +67,5 @@ func ShellCopyDir(
 			relSrcDir,
 			relDestDir,
 		),
-	)
-
-	_, err = commandTask.Start()
-
-	return err
+	).StartE()
 }

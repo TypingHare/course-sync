@@ -37,6 +37,19 @@ func DirExists(path string) (bool, error) {
 	return info.IsDir(), nil
 }
 
+func EnsureDirExists(path string) error {
+	exists, err := DirExists(path)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		return os.MkdirAll(path, 0o755)
+	}
+
+	return nil
+}
+
 // CollectFilesRecursively walks the directory tree rooted at dir and returns
 // the paths of all files it finds.
 //
