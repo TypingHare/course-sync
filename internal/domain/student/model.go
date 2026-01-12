@@ -11,6 +11,6 @@ type Student struct {
 	// Email is the email address of the student.
 	Email string `json:"email"`
 
-	// RepositoryUrl is the URL of the student's code repository.
-	RepositoryUrl string `json:"repository_url"`
+	// RepositoryURL is the URL of the student's code repository.
+	RepositoryURL string `json:"repository_url"`
 }
