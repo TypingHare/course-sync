@@ -13,6 +13,9 @@ import (
 // CommandTask represents a task that runs an external command with specified
 // arguments and displays messages based on its progress and outcome.
 type CommandTask struct {
+	// The working directory for the command execution.
+	workingDir string
+
 	// The external command to run.
 	command string
 
@@ -58,6 +61,7 @@ func NewCommandTask(
 	}
 
 	return &CommandTask{
+		workingDir:     appCtx.WorkingDir,
 		command:        command,
 		args:           args[1:],
 		ongoingMessage: ongoingMessage,
@@ -66,6 +70,13 @@ func NewCommandTask(
 		verbose:        appCtx.Verbose,
 		quiet:          appCtx.Quiet,
 	}
+}
+
+// SetWorkingDir sets the working directory for the command task and returns
+// the updated CommandTask.
+func (t *CommandTask) SetWorkingDir(dir string) *CommandTask {
+	t.workingDir = dir
+	return t
 }
 
 // Start executes the command task, displaying messages based on its progress
@@ -88,6 +99,7 @@ func (t *CommandTask) Start() (CommandTaskResult, error) {
 
 	// Execute the external command.
 	exitCode, stdout, stderr, err := RunCommand(
+		t.workingDir,
 		t.command,
 		t.args...,
 	)

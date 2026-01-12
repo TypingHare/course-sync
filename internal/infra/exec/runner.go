@@ -29,10 +29,14 @@ import (
 // RunCommand does not print output or modify terminal state; callers are
 // responsible for displaying or handling the returned output as appropriate.
 func RunCommand(
+	dir string,
 	name string,
 	args ...string,
 ) (exitCode int, stdout string, stderr string, err error) {
 	cmd := exec.Command(name, args...)
+	if dir != "" {
+		cmd.Dir = dir
+	}
 
 	var outBuf, errBuf bytes.Buffer
 	cmd.Stdout = &outBuf
