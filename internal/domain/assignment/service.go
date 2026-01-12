@@ -21,7 +21,7 @@ func GetAssignments(appCtx *app.Context) ([]Assignment, error) {
 		filepath.Join(appCtx.AppDataDir, ASSIGNMENTS_FILE_NAME),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to retrieve assignments: %w", err)
+		return nil, fmt.Errorf("retrieve assignments: %w", err)
 	}
 
 	return assignments, nil

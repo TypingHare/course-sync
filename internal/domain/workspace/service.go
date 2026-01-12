@@ -18,7 +18,7 @@ const PROTOTYPE_WORKSPACE = "[prototype]"
 func GetUserWorkspaceDir(appCtx *app.Context) (string, error) {
 	gitUsername, err := git.GitGetUsername(appCtx)
 	if err != nil || gitUsername == "" {
-		return "", fmt.Errorf("failed to get git username: %w", err)
+		return "", fmt.Errorf("get git username: %w", err)
 	}
 
 	workspaceDirName := strings.ReplaceAll(

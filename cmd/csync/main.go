@@ -19,7 +19,10 @@ func main() {
 
 	// Execute the CLI command.
 	if err = cli.Cmd(appCtx).Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, ui.MakeError("Fatal error: "+err.Error()))
+		fmt.Fprintln(
+			os.Stderr,
+			ui.MakeError("Fatal error: failed to "+err.Error()),
+		)
 		os.Exit(1)
 	}
 }

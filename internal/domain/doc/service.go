@@ -19,7 +19,7 @@ func GetDocs(appCtx *app.Context) ([]Doc, error) {
 		filepath.Join(appCtx.AppDataDir, DOCS_FILE_NAME),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to retrieve docs: %w", err)
+		return nil, fmt.Errorf("retrieve docs: %w", err)
 	}
 
 	return docs, nil

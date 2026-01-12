@@ -126,7 +126,9 @@ func (ctx *Context) GetRelPath(absPath string) (string, error) {
 // file if necessary.
 func (ctx *Context) GetConfig() *config.Config {
 	if ctx.config == nil {
-		config, _ := jsonstore.ReadJSONFile[config.Config](CONFIG_FILE_NAME)
+		config, _ := jsonstore.ReadJSONFile[config.Config](
+			filepath.Join(ctx.ProjectDir, CONFIG_FILE_NAME),
+		)
 		ctx.config = &config
 	}
 
