@@ -44,9 +44,7 @@ the --all flag to include submitted assignments as well.
 				})
 			}
 
-			table.Render()
-
-			return nil
+			return table.Render()
 		},
 	}
 

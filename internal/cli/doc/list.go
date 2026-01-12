@@ -42,9 +42,7 @@ By default, only assignments that have not been submitted are shown. Use the
 				})
 			}
 
-			table.Render()
-
-			return nil
+			return table.Render()
 		},
 	}
 
