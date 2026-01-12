@@ -41,7 +41,7 @@ func GenerateKeyPair(appCtx *app.Context, privateKeyFile string) error {
 func GenerateInstructorKeyPair(appCtx *app.Context, force bool) error {
 	instructorPrivateKeyFile := filepath.Join(
 		appCtx.AppDataDir,
-		app.INSTRUCTOR_PRIVATE_KEY_FILE_NAME,
+		app.InstructorPrivateKeyFileName,
 	)
 
 	instructorPrivateKeyFileExists, err := fs.FileExists(

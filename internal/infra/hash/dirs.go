@@ -20,7 +20,7 @@ import (
 // path (from dir) and its contents are included in the hash. File paths are
 // processed in sorted order to ensure deterministic output.
 //
-// The returned value is the last 8 hexadecimal characters of a SHA-256 digest.
+// The returned value is the last 12 hexadecimal characters of a SHA-256 digest.
 func CreateHashForDir(dir string, ignoredNames []string) (string, error) {
 	paths, err := fs.CollectFilesRecursively(dir, ignoredNames)
 	if err != nil {
@@ -37,7 +37,7 @@ func CreateHashForDir(dir string, ignoredNames []string) (string, error) {
 	}
 
 	sum := hex.EncodeToString(h.Sum(nil))
-	return sum[len(sum)-8:], nil
+	return sum[len(sum)-12:], nil
 }
 
 // hashRegularFile adds the relative path and contents of path to the hash.

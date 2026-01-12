@@ -42,7 +42,8 @@ submission was graded.
 					grade.AssignmentName,
 					grade.SubmissionHash,
 					strconv.FormatFloat(grade.Score, 'f', 2, 64),
-					grade.GradedAt.Format("2006-01-02 15:04"),
+					grade.GradedAt.Local().
+						Format("2006-01-02 15:04 MST"),
 				})
 			}
 

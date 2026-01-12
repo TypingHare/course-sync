@@ -8,14 +8,14 @@ import (
 	"github.com/TypingHare/course-sync/internal/infra/jsonstore"
 )
 
-// GRADES_FILE_NAME is the name of the file where grade history is stored.
-const GRADES_FILE_NAME = "grades.json"
+// GradesFileName is the name of the file where grade history is stored.
+const GradesFileName = "grades.json"
 
 // GetGrades retrieves the list of grades from the grades JSON file in the
 // application data directory.
 func GetGrades(appCtx *app.Context) ([]Grade, error) {
 	grades, err := jsonstore.ReadJSONFile[[]Grade](
-		filepath.Join(appCtx.AppDataDir, GRADES_FILE_NAME),
+		filepath.Join(appCtx.AppDataDir, GradesFileName),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("read grades file: %w", err)
@@ -68,7 +68,7 @@ func AppendGradeHistory(appCtx *app.Context, grade Grade) error {
 	grades = append(grades, grade)
 
 	return jsonstore.WriteJSONFile(
-		filepath.Join(appCtx.AppDataDir, GRADES_FILE_NAME),
+		filepath.Join(appCtx.AppDataDir, GradesFileName),
 		grades,
 	)
 }

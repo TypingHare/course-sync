@@ -14,22 +14,22 @@ import (
 
 // Configuration file name. This file is located in the application root
 // directory.
-const CONFIG_FILE_NAME = "config.json"
+const ConfigFileName = "config.json"
 
 // Application data directory name.
-const APP_DATA_DIR_NAME = ".csync"
+const AppDataDirName = ".csync"
 
-// SRC_DIR_NAME is the name of the source directory within the project.
-const SRC_DIR_NAME = "src"
+// SrcDirName is the name of the source directory within the project.
+const SrcDirName = "src"
 
 // DOCS_FILE_NAME is the name of the documentation file.
-const DOCS_DIR_NAME = "docs"
+const DocsDirName = "docs"
 
 // instructor private key file name inside the application directory.
-const INSTRUCTOR_PRIVATE_KEY_FILE_NAME = "instructor"
+const InstructorPrivateKeyFileName = "instructor"
 
 // instructor public key file name inside the application directory.
-const INSTRUCTOR_PUBLIC_KEY_FILE_NAME = "instructor.pub"
+const InstructorPublicKeyFileName = "instructor.pub"
 
 // Context holds the context for the Course Sync application.
 type Context struct {
@@ -70,19 +70,19 @@ func BuildContext() (*Context, error) {
 	// Set application data directory path.
 	ctx.AppDataDir = filepath.Join(
 		ctx.ProjectDir,
-		APP_DATA_DIR_NAME,
+		AppDataDirName,
 	)
 
 	// Set source directory path.
 	ctx.SrcDir = filepath.Join(
 		ctx.ProjectDir,
-		SRC_DIR_NAME,
+		SrcDirName,
 	)
 
 	// Set docs directory path.
 	ctx.DocsDir = filepath.Join(
 		ctx.ProjectDir,
-		DOCS_DIR_NAME,
+		DocsDirName,
 	)
 
 	// Determine user role.
@@ -100,14 +100,14 @@ func BuildContext() (*Context, error) {
 // directory.
 func GetRole(appDataDir string) (role.Role, error) {
 	isinstructor, err := fs.FileExists(
-		filepath.Join(appDataDir, INSTRUCTOR_PRIVATE_KEY_FILE_NAME),
+		filepath.Join(appDataDir, InstructorPrivateKeyFileName),
 	)
 	if err != nil {
 		return "", err
 	}
 
 	if isinstructor {
-		return role.Roleinstructor, nil
+		return role.RoleInstructor, nil
 	} else {
 		return role.RoleStudent, nil
 	}
@@ -128,7 +128,7 @@ func (ctx *Context) GetRelPath(absPath string) (string, error) {
 // file if necessary.
 func (ctx *Context) GetConfig() (*config.Config, error) {
 	if ctx.config == nil {
-		configFile := filepath.Join(ctx.AppDataDir, CONFIG_FILE_NAME)
+		configFile := filepath.Join(ctx.AppDataDir, ConfigFileName)
 		configFileExists, err := fs.FileExists(configFile)
 		if err != nil {
 			return nil, fmt.Errorf("check config file existence: %w", err)
@@ -154,7 +154,7 @@ func (ctx *Context) GetConfig() (*config.Config, error) {
 // SaveConfig saves the current configuration to the config file.
 func (ctx *Context) SaveConfig() error {
 	return jsonstore.WriteJSONFile(
-		filepath.Join(ctx.AppDataDir, CONFIG_FILE_NAME),
+		filepath.Join(ctx.AppDataDir, ConfigFileName),
 		ctx.config,
 	)
 }
@@ -164,7 +164,7 @@ func (ctx *Context) IsStudent() bool {
 	return ctx.Role == role.RoleStudent
 }
 
-// Isinstructor checks if the current user role is instructor.
-func (ctx *Context) Isinstructor() bool {
-	return ctx.Role == role.Roleinstructor
+// IsInstructor checks if the current user role is instructor.
+func (ctx *Context) IsInstructor() bool {
+	return ctx.Role == role.RoleInstructor
 }

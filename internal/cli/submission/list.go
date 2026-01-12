@@ -32,7 +32,8 @@ including their hash, assignment name, and submission date.
 				table.Append([]string{
 					submission.Hash,
 					submission.AssignmentName,
-					submission.SubmittedAt.Format("2006-01-02 15:04"),
+					submission.SubmittedAt.Local().
+						Format("2006-01-02 15:04 MST"),
 				})
 			}
 

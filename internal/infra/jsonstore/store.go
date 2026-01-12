@@ -3,6 +3,7 @@ package jsonstore
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -17,14 +18,20 @@ import (
 //   - Unknown JSON fields are rejected.
 //   - Trailing JSON or non-whitespace data after the first value is rejected.
 //
-// If the file does not exist, cannot be read, contains invalid JSON, contains
-// unknown fields, or contains trailing data, an error is returned and the zero
-// value of T is returned alongside the error.
+// If the file does not exist, the function returns the zero value of T and a
+// nil error.
+//
+// If the file cannot be read, contains invalid JSON, contains unknown fields,
+// or contains trailing data, an error is returned and the zero value of T is
+// returned alongside the error.
 func ReadJSONFile[T any](filePath string) (T, error) {
 	var zero T
 
 	data, err := os.ReadFile(filePath)
 	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return zero, nil
+		}
 		return zero, fmt.Errorf("read %s: %w", filePath, err)
 	}
 

@@ -13,13 +13,13 @@ import (
 )
 
 // Submission represents a user's submission data.
-const SUBMISSIONS_FILE_NAME = "submissions.json"
+const SubmissionsFileName = "submissions.json"
 
 // GetSubmissions retrieves the list of submissions from the submissions JSON
 // file in the application data directory.
 func GetSubmissions(appCtx *app.Context) ([]Submission, error) {
 	submissions, err := jsonstore.ReadJSONFile[[]Submission](
-		filepath.Join(appCtx.AppDataDir, SUBMISSIONS_FILE_NAME),
+		filepath.Join(appCtx.AppDataDir, SubmissionsFileName),
 	)
 	if err != nil {
 		return nil, err
@@ -91,7 +91,7 @@ func CreateSubmission(
 		Hash:           submissionHash,
 		GitCommitHash:  gitCommitHash,
 		AssignmentName: assignmentName,
-		SubmittedAt:    time.Now(),
+		SubmittedAt:    time.Now().UTC(),
 	}, nil
 }
 
@@ -105,7 +105,7 @@ func AddSubmissionToFile(appCtx *app.Context, submission Submission) error {
 	submissions = append(submissions, submission)
 
 	return jsonstore.WriteJSONFile(
-		filepath.Join(appCtx.AppDataDir, SUBMISSIONS_FILE_NAME),
+		filepath.Join(appCtx.AppDataDir, SubmissionsFileName),
 		submissions,
 	)
 }

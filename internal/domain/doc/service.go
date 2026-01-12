@@ -10,13 +10,13 @@ import (
 	"github.com/TypingHare/course-sync/internal/infra/jsonstore"
 )
 
-const DOCS_FILE_NAME = "docs.json"
+const DocsFileName = "docs.json"
 
 // GetDocs reads and returns the documentation items from the docs JSON file
 // file in the application data directory.
 func GetDocs(appCtx *app.Context) ([]Doc, error) {
 	docs, err := jsonstore.ReadJSONFile[[]Doc](
-		filepath.Join(appCtx.AppDataDir, DOCS_FILE_NAME),
+		filepath.Join(appCtx.AppDataDir, DocsFileName),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("retrieve docs: %w", err)

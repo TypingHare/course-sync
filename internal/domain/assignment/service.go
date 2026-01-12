@@ -11,14 +11,15 @@ import (
 	"github.com/TypingHare/course-sync/internal/infra/jsonstore"
 )
 
-// Assignments file name inside the application data directory.
-const ASSIGNMENTS_FILE_NAME = "assignments.json"
+// AssignmentsFileName is the name of the file where assignment records are
+// stored.
+const AssignmentsFileName = "assignments.json"
 
 // GetAssignments retrieves the list of assignments from the assignments JSON
 // file in the application data directory.
 func GetAssignments(appCtx *app.Context) ([]Assignment, error) {
 	assignments, err := jsonstore.ReadJSONFile[[]Assignment](
-		filepath.Join(appCtx.AppDataDir, ASSIGNMENTS_FILE_NAME),
+		filepath.Join(appCtx.AppDataDir, AssignmentsFileName),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("retrieve assignments: %w", err)

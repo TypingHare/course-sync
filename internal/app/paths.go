@@ -11,7 +11,7 @@ import (
 // considered project root directory (or simply project directory). The Git
 // hidden directory is used as the project root marker because Course Sync is
 // intended to be used in Git repositories.
-const PROJECT_ROOT_MARKER_DIR_NAME = ".git"
+const ProjectRootMarkerDirName = ".git"
 
 // FindProjectDir walks upward from startDir looking for the project root marker
 // directory. It returns the path to the directory containing the project root
@@ -37,7 +37,7 @@ func FindProjectDir(startDir string) (string, error) {
 	}
 
 	for {
-		markerPath := filepath.Join(dir, PROJECT_ROOT_MARKER_DIR_NAME)
+		markerPath := filepath.Join(dir, ProjectRootMarkerDirName)
 
 		if fi, statErr := os.Stat(markerPath); statErr == nil && fi.IsDir() {
 			return dir, nil
@@ -63,7 +63,7 @@ func FindProjectDir(startDir string) (string, error) {
 
 	return "", fmt.Errorf(
 		"project root marker not found: %s (starting from %s)",
-		PROJECT_ROOT_MARKER_DIR_NAME,
+		ProjectRootMarkerDirName,
 		originalStart,
 	)
 }

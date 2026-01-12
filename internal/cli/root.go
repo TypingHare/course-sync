@@ -56,7 +56,6 @@ generated files and prevent tampering with submissions and metadata.
 	cmd.AddCommand(
 		contextCmd(appCtx),
 		pathCmd(appCtx),
-		initCmd(appCtx),
 		ssh.Cmd(appCtx),
 		doc.Cmd(appCtx),
 		assignment.Cmd(appCtx),
@@ -64,7 +63,7 @@ generated files and prevent tampering with submissions and metadata.
 		grade.Cmd(appCtx),
 	)
 
-	if appCtx.Isinstructor() {
+	if appCtx.IsInstructor() {
 		cmd.AddCommand(student.Cmd(appCtx))
 	}
 
