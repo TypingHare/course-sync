@@ -15,14 +15,14 @@ type Assignment struct {
 	Description string `json:"description"`
 
 	// Time when the assignment is released.
-	ReleasedAt time.Time `json:"releasedAt"`
+	ReleasedAt time.Time `json:"released_at"`
 
 	// Time when the assignment is due.
-	DueAt time.Time `json:"dueAt"`
+	DueAt time.Time `json:"due_at"`
 
 	// Maximum score achievable for the assignment.
-	MaxScore float64 `json:"maxScore"`
+	MaxScore float64 `json:"max_score"`
 
 	// Minimum score required to pass the assignment.
-	PassingScore float64 `json:"passingScore"`
+	PassingScore float64 `json:"passing_score"`
 }
