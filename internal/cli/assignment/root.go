@@ -19,7 +19,15 @@ assignments and preparing assignments for submission.
         `),
 	}
 
-	cmd.AddCommand(ListCmd(appCtx), prepareCmd(appCtx))
+	cmd.AddCommand(ListCmd(appCtx))
+
+	if appCtx.IsInstructor() {
+		cmd.AddCommand(releaseCmd(appCtx))
+	}
+
+	if appCtx.IsStudent() {
+		cmd.AddCommand(prepareCmd(appCtx))
+	}
 
 	return cmd
 }

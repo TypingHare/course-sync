@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/TypingHare/course-sync/internal/domain/port"
 	"github.com/TypingHare/course-sync/internal/ui"
 	"github.com/fatih/color"
 )
@@ -47,7 +47,7 @@ type CommandTaskResult struct {
 
 // NewCommandTask creates a new CommandTask with the given parameters.
 func NewCommandTask(
-	appCtx *app.Context,
+	outputMode port.OutputMode,
 	args []string,
 	ongoingMessage string,
 	doneMessage string,
@@ -61,14 +61,14 @@ func NewCommandTask(
 	}
 
 	return &CommandTask{
-		workingDir:     appCtx.WorkingDir,
+		workingDir:     "",
 		command:        command,
 		args:           args[1:],
 		ongoingMessage: ongoingMessage,
 		doneMessage:    doneMessage,
 		errorMessage:   errorMessage,
-		verbose:        appCtx.Verbose,
-		quiet:          appCtx.Quiet,
+		verbose:        outputMode.IsVerbose(),
+		quiet:          outputMode.IsQuiet(),
 	}
 }
 

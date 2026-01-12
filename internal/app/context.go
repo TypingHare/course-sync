@@ -25,12 +25,6 @@ const SrcDirName = "src"
 // DOCS_FILE_NAME is the name of the documentation file.
 const DocsDirName = "docs"
 
-// instructor private key file name inside the application directory.
-const InstructorPrivateKeyFileName = "instructor"
-
-// instructor public key file name inside the application directory.
-const InstructorPublicKeyFileName = "instructor.pub"
-
 // Context holds the context for the Course Sync application.
 type Context struct {
 	// CLI options (flags).

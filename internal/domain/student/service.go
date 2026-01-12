@@ -31,8 +31,8 @@ func GetStudentDirName(studentName string) string {
 	return strings.ReplaceAll(strcase.ToSnake(studentName), "_", "-")
 }
 
-// GetLocalStudentRepoDir constructs the local path for a student's repository
+// GetStudentRepoDir constructs the local path for a student's repository
 // based on the base directory and the student's directory name.
-func GetLocalStudentRepoDir(studentName string) string {
+func GetStudentRepoDir(studentName string) string {
 	return filepath.Join(StudentRepoBaseDir, GetStudentDirName(studentName))
 }

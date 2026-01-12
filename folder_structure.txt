@@ -1,0 +1,47 @@
+cmd/
+  course-sync/
+    main.go                 # wiring only
+
+internal/
+  cli/                      # cobra commands, args/flags, presentation
+    root.go
+    assignment_cmd.go
+    student_cmd.go
+
+  core/                     # domain-ish "pure core": no fs/exec/json/git
+    assignment/
+      model.go
+      rules.go              # FindByName, validation, etc.
+    student/
+      model.go
+      rules.go
+    timeparse/
+      parse.go              # ParseUTCTime etc. (pure)
+
+  app/                      # use-cases / orchestration (depends on core + ports)
+    assignment/
+      prepare.go
+      list.go
+    student/
+      register.go
+      list.go
+
+  ports/                    # interfaces the app uses (owned by app boundary)
+    fs.go                   # FileSystem interface
+    assignments.go          # AssignmentStore interface
+    vcs.go                  # GitClient interface
+    reporter.go             # Reporter (quiet/verbose) interface
+    paths.go                # Paths/Runtime interface (optional)
+
+  adapters/                 # concrete implementations (IO) for ports
+    fsos/                   # os filesystem implementation (stat/mkdir/rm/copy)
+      fs.go
+    storejson/              # json file store implementations
+      assignments.go
+    gitcli/                 # wraps git executable
+      client.go
+    reporter/               # terminal reporting that respects quiet/verbose
+      reporter.go
+
+  runtime/                  # concrete "Context" that bundles flags + adapters
+    context.go              # implements ports.Runtime/Paths/Reporter if you want

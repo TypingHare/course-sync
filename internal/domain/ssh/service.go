@@ -4,23 +4,37 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/TypingHare/course-sync/internal/domain/port"
 	"github.com/TypingHare/course-sync/internal/infra/exec"
 	"github.com/TypingHare/course-sync/internal/infra/fs"
 )
+
+// instructor private key file name inside the application directory.
+const InstructorPrivateKeyFileName = "instructor"
+
+// instructor public key file name inside the application directory.
+const InstructorPublicKeyFileName = "instructor.pub"
 
 // GenerateKeyPair generates a new SSH key pair. This function ensures that the
 // parent directory for the private key file exists before generating the
 // pair. Then, it uses the ssh-keygen command to create an ed25519 key pair
 // without a passphrase.
-func GenerateKeyPair(appCtx *app.Context, privateKeyFile string) error {
-	err := exec.ShellEnsureDir(appCtx, filepath.Dir(privateKeyFile))
+func GenerateKeyPair(
+	outputMode port.OutputMode,
+	projectDir string,
+	privateKeyFile string,
+) error {
+	err := exec.ShellEnsureDir(
+		outputMode,
+		projectDir,
+		filepath.Dir(privateKeyFile),
+	)
 	if err != nil {
 		return fmt.Errorf("ensure parent directory exists: %w", err)
 	}
 
 	return exec.NewCommandTask(
-		appCtx,
+		outputMode,
 		[]string{
 			"ssh-keygen",
 			"-t",
@@ -38,10 +52,15 @@ func GenerateKeyPair(appCtx *app.Context, privateKeyFile string) error {
 
 // GenerateInstructorKeyPair generates a new instructor SSH key pair and saves
 // it to the application directory.
-func GenerateInstructorKeyPair(appCtx *app.Context, force bool) error {
+func GenerateInstructorKeyPair(
+	outputMode port.OutputMode,
+	projectDir string,
+	appDataDir string,
+	force bool,
+) error {
 	instructorPrivateKeyFile := filepath.Join(
-		appCtx.AppDataDir,
-		app.InstructorPrivateKeyFileName,
+		appDataDir,
+		InstructorPrivateKeyFileName,
 	)
 
 	instructorPrivateKeyFileExists, err := fs.FileExists(
@@ -58,5 +77,5 @@ func GenerateInstructorKeyPair(appCtx *app.Context, force bool) error {
 		)
 	}
 
-	return GenerateKeyPair(appCtx, instructorPrivateKeyFile)
+	return GenerateKeyPair(outputMode, projectDir, instructorPrivateKeyFile)
 }

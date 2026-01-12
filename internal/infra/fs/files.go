@@ -1,6 +1,7 @@
 package fs
 
 import (
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -37,6 +38,9 @@ func DirExists(path string) (bool, error) {
 	return info.IsDir(), nil
 }
 
+// EnsureDirExists checks if a directory exists at the given path, and creates
+// it (including any necessary parent directories) if it does not exist. It
+// returns an error if there was an issue checking or creating the directory.
 func EnsureDirExists(path string) error {
 	exists, err := DirExists(path)
 	if err != nil {
@@ -48,6 +52,31 @@ func EnsureDirExists(path string) error {
 	}
 
 	return nil
+}
+
+// CopyFile copies a file from srcPath to destPath. If the destination directory
+// does not exist, it is created. It returns an error if there was an issue
+// during the copy process.
+func CopyFile(srcPath, destPath string) error {
+	srcFile, err := os.Open(srcPath)
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+
+	destDir := filepath.Dir(destPath)
+	if err := EnsureDirExists(destDir); err != nil {
+		return err
+	}
+
+	destFile, err := os.Create(destPath)
+	if err != nil {
+		return err
+	}
+	defer destFile.Close()
+
+	_, err = io.Copy(destFile, srcFile)
+	return err
 }
 
 // CollectFilesRecursively walks the directory tree rooted at dir and returns

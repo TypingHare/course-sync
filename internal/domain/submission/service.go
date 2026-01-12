@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/TypingHare/course-sync/internal/domain/assignment"
+	"github.com/TypingHare/course-sync/internal/domain/port"
 	"github.com/TypingHare/course-sync/internal/infra/git"
 	"github.com/TypingHare/course-sync/internal/infra/hash"
 	"github.com/TypingHare/course-sync/internal/infra/jsonstore"
@@ -17,9 +17,9 @@ const SubmissionsFileName = "submissions.json"
 
 // GetSubmissions retrieves the list of submissions from the submissions JSON
 // file in the application data directory.
-func GetSubmissions(appCtx *app.Context) ([]Submission, error) {
+func GetSubmissions(appDataDir string) ([]Submission, error) {
 	submissions, err := jsonstore.ReadJSONFile[[]Submission](
-		filepath.Join(appCtx.AppDataDir, SubmissionsFileName),
+		filepath.Join(appDataDir, SubmissionsFileName),
 	)
 	if err != nil {
 		return nil, err
@@ -40,11 +40,13 @@ func CreateHashForUserAssignmentDir(userAssignmentDir string) (string, error) {
 // CreateSubmission creates a new submission for the given assignment. It stages
 // and commits the submission in Git. It returns the created Submission object.
 func CreateSubmission(
-	appCtx *app.Context,
+	outputMode port.OutputMode,
+	appDataDir string,
+	srcDir string,
 	assignmentName string,
 ) (*Submission, error) {
 	userAssignmentDir, err := assignment.GetUserAssignmentDir(
-		appCtx,
+		outputMode, srcDir,
 		assignmentName,
 	)
 	if err != nil {
@@ -57,7 +59,7 @@ func CreateSubmission(
 	}
 
 	// Get submissions.
-	submissions, err := GetSubmissions(appCtx)
+	submissions, err := GetSubmissions(appDataDir)
 	if err != nil {
 		return nil, fmt.Errorf("get submissions: %w", err)
 	}
@@ -72,17 +74,17 @@ func CreateSubmission(
 		}
 	}
 
-	if err = git.Add(appCtx, userAssignmentDir); err != nil {
+	if err = git.Add(outputMode, userAssignmentDir); err != nil {
 		return nil, fmt.Errorf("git add submission: %w", err)
 	}
 
-	err = git.Commit(appCtx, "feat: student submission "+submissionHash)
+	err = git.Commit(outputMode, "feat: student submission "+submissionHash)
 	if err != nil {
 		return nil, fmt.Errorf("git commit submission: %w", err)
 	}
 
 	// Get the latest commit hash.
-	gitCommitHash, err := git.RevParseHead(appCtx)
+	gitCommitHash, err := git.RevParseHead(outputMode)
 	if err != nil {
 		return nil, err
 	}
@@ -96,8 +98,11 @@ func CreateSubmission(
 }
 
 // AddSubmissionToFile adds the given submission to the submissions JSON file.
-func AddSubmissionToFile(appCtx *app.Context, submission Submission) error {
-	submissions, err := GetSubmissions(appCtx)
+func AddSubmissionToFile(
+	appDataDir string,
+	submission Submission,
+) error {
+	submissions, err := GetSubmissions(appDataDir)
 	if err != nil {
 		return fmt.Errorf("get submissions %w", err)
 	}
@@ -105,7 +110,7 @@ func AddSubmissionToFile(appCtx *app.Context, submission Submission) error {
 	submissions = append(submissions, submission)
 
 	return jsonstore.WriteJSONFile(
-		filepath.Join(appCtx.AppDataDir, SubmissionsFileName),
+		filepath.Join(appDataDir, SubmissionsFileName),
 		submissions,
 	)
 }

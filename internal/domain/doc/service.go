@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/TypingHare/course-sync/internal/domain/port"
 	"github.com/TypingHare/course-sync/internal/infra/exec"
 	"github.com/TypingHare/course-sync/internal/infra/jsonstore"
 )
@@ -14,9 +14,9 @@ const DocsFileName = "docs.json"
 
 // GetDocs reads and returns the documentation items from the docs JSON file
 // file in the application data directory.
-func GetDocs(appCtx *app.Context) ([]Doc, error) {
+func GetDocs(appDataDir string) ([]Doc, error) {
 	docs, err := jsonstore.ReadJSONFile[[]Doc](
-		filepath.Join(appCtx.AppDataDir, DocsFileName),
+		filepath.Join(appDataDir, DocsFileName),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("retrieve docs: %w", err)
@@ -52,7 +52,11 @@ func GetDocByName(docs []Doc, name string) *Doc {
 // OpenDoc opens the documentation file located at the given path. This function
 // uses the default application associated with the file type on the user's
 // operating system.
-func OpenDoc(appCtx *app.Context, docAbsFile string) error {
+func OpenDoc(
+	outputMode port.OutputMode,
+	projectDir string,
+	docAbsFile string,
+) error {
 	if docAbsFile == "" {
 		return fmt.Errorf("documentation file path is empty")
 	}
@@ -76,13 +80,13 @@ func OpenDoc(appCtx *app.Context, docAbsFile string) error {
 		return fmt.Errorf("unsupported operating system: %s", runtime.GOOS)
 	}
 
-	docRelPath, err := appCtx.GetRelPath(docAbsFile)
+	docRelPath, err := filepath.Rel(projectDir, docAbsFile)
 	if err != nil {
 		return err
 	}
 
 	return exec.NewCommandTask(
-		appCtx,
+		outputMode,
 		args,
 		fmt.Sprintf("Opening documentation at %q...", docRelPath),
 		fmt.Sprintf("Opened documentation at %q.", docRelPath),

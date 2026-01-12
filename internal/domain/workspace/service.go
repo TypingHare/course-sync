@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/TypingHare/course-sync/internal/domain/port"
 	"github.com/TypingHare/course-sync/internal/domain/student"
 	"github.com/TypingHare/course-sync/internal/infra/git"
 )
@@ -14,18 +14,21 @@ const PROTOTYPE_WORKSPACE = "[prototype]"
 
 // GetUserWorkspaceDir constructs the path to the user's workspace directory
 // based on the git username and the project directory.
-func GetUserWorkspaceDir(appCtx *app.Context) (string, error) {
-	gitUsername, err := git.GetUsername(appCtx)
+func GetUserWorkspaceDir(
+	outputMode port.OutputMode,
+	srcDir string,
+) (string, error) {
+	gitUsername, err := git.GetUsername(outputMode)
 	if err != nil || gitUsername == "" {
 		return "", fmt.Errorf("get git username: %w", err)
 	}
 
 	workspaceDirName := student.GetStudentDirName(gitUsername)
-	return filepath.Join(appCtx.SrcDir, workspaceDirName), nil
+	return filepath.Join(srcDir, workspaceDirName), nil
 }
 
 // GetPrototypeWorkspaceDir constructs the path to the prototype workspace
 // directory within the project directory.
-func GetPrototypeWorkspaceDir(appCtx *app.Context) string {
-	return filepath.Join(appCtx.SrcDir, PROTOTYPE_WORKSPACE)
+func GetPrototypeWorkspaceDir(srcDir string) string {
+	return filepath.Join(srcDir, PROTOTYPE_WORKSPACE)
 }

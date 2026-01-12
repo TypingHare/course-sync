@@ -1,14 +1,12 @@
 package student
 
 import (
-	"bufio"
 	"fmt"
-	"io"
-	"os"
 	"strings"
 
 	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/TypingHare/course-sync/internal/domain/student"
+	"github.com/TypingHare/course-sync/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -29,29 +27,23 @@ the configuration file.
 				return fmt.Errorf("failed to get config: %w", err)
 			}
 
-			scanner := bufio.NewScanner(os.Stdin)
-			promptLine := func(label string) (string, error) {
-				fmt.Print(label)
-				if !scanner.Scan() {
-					if err := scanner.Err(); err != nil {
-						return "", err
-					}
-					return "", io.EOF
-				}
-				return strings.TrimSpace(scanner.Text()), nil
-			}
-
-			studentName, err := promptLine("Student Name: ")
+			studentName, err := ui.ReadLine(cmd.OutOrStdout(), "Student Name: ")
 			if err != nil {
 				return fmt.Errorf("failed to read student name: %w", err)
 			}
 
-			studentEmail, err := promptLine("Student Email: ")
+			studentEmail, err := ui.ReadLine(
+				cmd.OutOrStdout(),
+				"Student Email: ",
+			)
 			if err != nil {
 				return fmt.Errorf("failed to read student email: %w", err)
 			}
 
-			repositoryURL, err := promptLine("Repository URL: ")
+			repositoryURL, err := ui.ReadLine(
+				cmd.OutOrStdout(),
+				"Repository URL: ",
+			)
 			if err != nil {
 				return fmt.Errorf("failed to read repository URL: %w", err)
 			}
