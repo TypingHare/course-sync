@@ -6,6 +6,7 @@ import (
 
 	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/TypingHare/course-sync/internal/cli"
+	"github.com/TypingHare/course-sync/internal/ui"
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 
 	// Execute the CLI command.
 	if err = cli.Cmd(appCtx).Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, ui.MakeError("Fatal error: "+err.Error()))
 		os.Exit(1)
 	}
 }
