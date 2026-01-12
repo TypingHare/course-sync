@@ -12,7 +12,8 @@ import (
 	"github.com/TypingHare/course-sync/internal/infra/fs"
 )
 
-// Configuration file name.
+// Configuration file name. This file is located in the application root
+// directory.
 const CONFIG_FILE_NAME = "config.json"
 
 // Application data directory name.
@@ -85,7 +86,7 @@ func BuildContext() (*Context, error) {
 	)
 
 	// Determine user role.
-	userRole, err := GetRole(ctx.ProjectDir)
+	userRole, err := GetRole(ctx.AppDataDir)
 	if err != nil {
 		return nil, err
 	}
@@ -124,18 +125,35 @@ func (ctx *Context) GetRelPath(absPath string) (string, error) {
 
 // GetConfig retrieves the application configuration, loading it from the Config
 // file if necessary.
-func (ctx *Context) GetConfig() *config.Config {
+func (ctx *Context) GetConfig() (*config.Config, error) {
 	if ctx.config == nil {
-		config, _ := jsonstore.ReadJSONFile[config.Config](
-			filepath.Join(ctx.ProjectDir, CONFIG_FILE_NAME),
+		config, err := jsonstore.ReadJSONFile[config.Config](
+			filepath.Join(ctx.AppDataDir, CONFIG_FILE_NAME),
 		)
+		if err != nil {
+			return nil, fmt.Errorf("read config: %w", err)
+		}
+
 		ctx.config = &config
 	}
 
-	return ctx.config
+	return ctx.config, nil
 }
 
 // SaveConfig saves the current configuration to the config file.
 func (ctx *Context) SaveConfig() error {
-	return jsonstore.WriteJSONFile(CONFIG_FILE_NAME, ctx.config)
+	return jsonstore.WriteJSONFile(
+		filepath.Join(ctx.AppDataDir, CONFIG_FILE_NAME),
+		ctx.config,
+	)
+}
+
+// IsStudent checks if the current user role is Student.
+func (ctx *Context) IsStudent() bool {
+	return ctx.Role == role.RoleStudent
+}
+
+// IsMaster checks if the current user role is Master.
+func (ctx *Context) IsMaster() bool {
+	return ctx.Role == role.RoleMaster
 }
