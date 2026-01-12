@@ -15,7 +15,13 @@ func listCmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all students",
-		Long:  strings.TrimSpace(``),
+		Long: strings.TrimSpace(`
+Display the current student roster in a table.
+
+This reads the roster from the configuration file and prints each student's
+ID, name, email, and repository URL. Use this to verify the roster before
+syncing or grading operations.
+        `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := appCtx.GetConfig()
 			if err != nil {

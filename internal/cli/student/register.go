@@ -16,7 +16,13 @@ func registerCmd(appCtx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "register",
 		Short: "Register a new student",
-		Long:  strings.TrimSpace(``),
+		Long: strings.TrimSpace(`
+Add a new student to the course roster.
+
+You will be prompted for the student's name, email, and repository URL. The
+command assigns the next available numeric ID and saves the updated roster to
+the configuration file.
+        `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			config, err := appCtx.GetConfig()
 			if err != nil {
