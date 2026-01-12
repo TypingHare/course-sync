@@ -72,11 +72,7 @@ func (t *CommandTask) Start() (CommandTaskResult, error) {
 	var appendedCommandStr string
 
 	if t.verbose {
-		// TODO: Join the args properly
-		commandStr := t.command + " " + strings.Join(
-			t.args,
-			" ",
-		)
+		commandStr := JoinCommand(t.command, t.args)
 		appendedCommandStr = fmt.Sprintf("\n   [ %s ]", commandStr)
 	}
 
