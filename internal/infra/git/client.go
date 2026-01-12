@@ -69,3 +69,22 @@ func GitPull(appCtx *app.Context) error {
 		"Failed to pull changes from remote repository.",
 	).StartE()
 }
+
+// GitRevParseHead retrieves the current Git commit hash (HEAD).
+// It returns the commit hash as a string.
+func GitRevParseHead(appCtx *app.Context) (string, error) {
+	commandTask := exec.NewCommandTask(
+		appCtx,
+		[]string{"git", "rev-parse", "HEAD"},
+		"Retrieving current Git commit hash...",
+		"Retrieved current Git commit hash.",
+		"Failed to retrieve current Git commit hash.",
+	)
+
+	result, err := commandTask.Start()
+	if err != nil {
+		return "", fmt.Errorf("get git commit hash: %w", err)
+	}
+
+	return strings.TrimSpace(result.Stdout), nil
+}
