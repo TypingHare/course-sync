@@ -59,6 +59,7 @@ generated files and prevent tampering with submissions and metadata.
 	cmd.AddCommand(contextCmd(ctx))
 	cmd.AddCommand(userCmd(ctx))
 	cmd.AddCommand(pathCmd(ctx))
+	cmd.AddCommand(syncCmd(ctx))
 	cmd.AddCommand(assignment.Cmd(ctx))
 	cmd.AddCommand(doc.Cmd(ctx))
 	cmd.AddCommand(grade.Cmd(ctx))
