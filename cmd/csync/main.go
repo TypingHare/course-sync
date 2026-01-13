@@ -6,6 +6,7 @@ import (
 
 	"github.com/TypingHare/course-sync/internal/app"
 	"github.com/TypingHare/course-sync/internal/cli"
+	"github.com/fatih/color"
 )
 
 func main() {
@@ -21,7 +22,7 @@ func main() {
 	if err := cli.Cmd(ctx).Execute(); err != nil {
 		fmt.Fprintln(
 			os.Stderr,
-			"Error:", err,
+			color.HiRedString(fmt.Sprintf("Error: %s", err)),
 		)
 		os.Exit(1)
 	}
