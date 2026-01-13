@@ -50,5 +50,9 @@ generated files and prevent tampering with submissions and metadata.
 
 	cmd.AddCommand(assignment.Cmd(ctx))
 
+	// Stop Cobra from printing usage or errors automatically.
+	cmd.SilenceUsage = true
+	cmd.SilenceErrors = true
+
 	return cmd
 }
