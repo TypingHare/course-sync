@@ -2,6 +2,6 @@ package repo
 
 import "github.com/TypingHare/course-sync/internal/domain/model"
 
-type IAssignmentRepo interface {
-	IBaseRepo[model.Assignment]
+type ISubmissionRepo interface {
+	IBaseRepo[model.Submission]
 }
