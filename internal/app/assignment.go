@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/TypingHare/course-sync/internal/adapter/repo/jsonstore"
-	"github.com/TypingHare/course-sync/internal/domain/model"
 	"github.com/TypingHare/course-sync/internal/domain/service"
 	"github.com/TypingHare/course-sync/internal/support/exec"
 	"github.com/TypingHare/course-sync/internal/support/filesystem"
@@ -24,11 +23,6 @@ func GetAssignmentService(
 	return service.NewAssignmentService(
 		jsonstore.NewAssignmentRepo(assignmentDataFile),
 	)
-}
-
-// GetAllAssignment retrieves all assignments from the JSON store.
-func GetAllAssignment(dataDir string) ([]model.Assignment, error) {
-	return jsonstore.NewAssignmentRepo(GetAssignmentDataFile(dataDir)).GetAll()
 }
 
 // GetUserAssignmentDir returns the path to the user assignment directory where

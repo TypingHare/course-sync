@@ -7,9 +7,13 @@ import (
 	"path/filepath"
 )
 
+const GitRepositoryDirName = ".git"
+
 const AppDataDirName = ".csync"
 
-const GitRepositoryDirName = ".git"
+const SrcDirName = "src"
+
+const DocsDirName = "docs"
 
 const InstructorPrivateKeyFileName = "instructor"
 
@@ -72,7 +76,11 @@ func GetDataDir(projectDir string) string {
 }
 
 func GetSrcDir(projectDir string) string {
-	return filepath.Join(projectDir, "src")
+	return filepath.Join(projectDir, SrcDirName)
+}
+
+func GetDocsDir(projectDir string) string {
+	return filepath.Join(projectDir, DocsDirName)
 }
 
 func GetInstructorPrivateKeyFile(appDataDir string) string {

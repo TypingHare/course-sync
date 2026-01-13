@@ -1,0 +1,25 @@
+package doc
+
+import (
+	"strings"
+
+	"github.com/TypingHare/course-sync/internal/app"
+	"github.com/spf13/cobra"
+)
+
+func Cmd(ctx *app.Context) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "doc",
+		Short: "Manage documentation",
+		Long: strings.TrimSpace(`
+Manage course documentation.
+
+This command provides access to documentation-related actions, such as listing
+available documents and opening specific documents.
+        `),
+	}
+
+	cmd.AddCommand(listCmd(ctx), defaultCmd(ctx), openCmd(ctx))
+
+	return cmd
+}
