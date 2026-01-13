@@ -41,9 +41,9 @@ func ShellEnsureDir(
 	return NewCommandRunner(
 		outputMode,
 		[]string{"mkdir", "-p", absDir},
-		fmt.Sprintf("Creating directory %q...", relDir),
-		fmt.Sprintf("Created directory %q.", relDir),
-		fmt.Sprintf("Failed to create directory %q.", relDir),
+		fmt.Sprintf("Ensuring directory  %q...", relDir),
+		fmt.Sprintf("Ensured directory %q.", relDir),
+		fmt.Sprintf("Failed to ensure directory %q.", relDir),
 	).StartE()
 }
 

@@ -7,6 +7,7 @@ import (
 	"github.com/TypingHare/course-sync/internal/cli/assignment"
 	"github.com/TypingHare/course-sync/internal/cli/doc"
 	"github.com/TypingHare/course-sync/internal/cli/grade"
+	"github.com/TypingHare/course-sync/internal/cli/ssh"
 	"github.com/TypingHare/course-sync/internal/cli/submission"
 	"github.com/spf13/cobra"
 )
@@ -64,6 +65,7 @@ generated files and prevent tampering with submissions and metadata.
 	cmd.AddCommand(doc.Cmd(ctx))
 	cmd.AddCommand(grade.Cmd(ctx))
 	cmd.AddCommand(submission.Cmd(ctx))
+	cmd.AddCommand(ssh.Cmd(ctx))
 
 	// Stop Cobra from printing usage or errors automatically.
 	cmd.SilenceUsage = true
