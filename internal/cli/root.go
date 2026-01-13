@@ -45,10 +45,16 @@ generated files and prevent tampering with submissions and metadata.
 	)
 	cmd.PersistentFlags().BoolVarP(
 		&ctx.Quiet,
-		"quiet", "q", false,
+		"quiet", "", false,
 		"suppress non-error output",
 	)
+	cmd.PersistentFlags().BoolVarP(
+		&ctx.Plain,
+		"plain", "", false,
+		"disable styled output",
+	)
 
+	cmd.AddCommand(contextCmd(ctx))
 	cmd.AddCommand(assignment.Cmd(ctx))
 	cmd.AddCommand(doc.Cmd(ctx))
 
