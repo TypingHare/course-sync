@@ -71,7 +71,7 @@ Use the flags below to display the paths to individual files or directories.
 				cmd.Println(app.GetPrototypeWorkspaceDir(ctx.ProjectDir))
 			case shouldDisplayStudentWorkspaceDir:
 				studentWorkspaceDir, err := app.GetStudentWorkspaceDir(
-					&ctx.OutputMode,
+					ctx.OutputMode,
 					ctx.ProjectDir,
 				)
 				if err != nil {

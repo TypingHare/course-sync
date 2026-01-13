@@ -27,9 +27,9 @@ and therefore not shown here. To view or manage configuration values, use the
 			cmd.Printf("verbose = %s\n", strconv.FormatBool(ctx.Verbose))
 			cmd.Printf("quiet = %s\n", strconv.FormatBool(ctx.Quiet))
 			cmd.Printf("plain = %s\n", strconv.FormatBool(ctx.Plain))
-			cmd.Printf("working directory = %s\n", ctx.WorkingDir)
-			cmd.Printf("project directory = %s\n", ctx.ProjectDir)
-			cmd.Printf("user role = %s\n", string(ctx.Role))
+			cmd.Printf("working_directory = %s\n", ctx.WorkingDir)
+			cmd.Printf("project_directory = %s\n", ctx.ProjectDir)
+			cmd.Printf("user_role = %s\n", string(ctx.Role))
 		},
 	}
 }

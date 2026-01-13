@@ -27,7 +27,7 @@ On success, the command prints the hash of the newly created submission.
 			assignmentName := args[0]
 
 			submission, err := app.CreateSubmission(
-				&ctx.OutputMode,
+				ctx.OutputMode,
 				app.GetDataDir(ctx.ProjectDir),
 				app.GetSrcDir(ctx.ProjectDir),
 				assignmentName,

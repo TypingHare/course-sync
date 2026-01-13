@@ -8,7 +8,7 @@ import (
 )
 
 type Context struct {
-	io.OutputMode
+	*io.OutputMode
 
 	WorkingDir string
 	ProjectDir string
@@ -36,7 +36,7 @@ func NewContext() (*Context, error) {
 	}
 
 	return &Context{
-		OutputMode: *io.NewOutputMode(false, false, false),
+		OutputMode: io.NewOutputMode(false, false, false),
 		WorkingDir: workingDir,
 		ProjectDir: projectDir,
 		Role:       role,

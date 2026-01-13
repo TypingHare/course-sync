@@ -22,7 +22,7 @@ By default, this prints the Git username. Use --dirname to output the
 student directory name used by Course Sync.
 		`),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			gitUsername, err := exec.GitGetUsername(&ctx.OutputMode)
+			gitUsername, err := exec.GitGetUsername(ctx.OutputMode)
 			if err != nil {
 				return fmt.Errorf("failed to get git username: %w", err)
 			}

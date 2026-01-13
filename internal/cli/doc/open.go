@@ -61,7 +61,7 @@ command returns an error.
 			}
 
 			return exec.OpenFile(
-				&ctx.OutputMode,
+				ctx.OutputMode,
 				ctx.ProjectDir,
 				app.GetDocFilePath(ctx.ProjectDir, docToOpen.Path),
 			)

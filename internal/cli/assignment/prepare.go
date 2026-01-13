@@ -46,7 +46,7 @@ the --force flag is specified.
 		RunE: func(cmd *cobra.Command, args []string) error {
 			assignmentName := args[0]
 			err := app.PrepareAssignment(
-				&ctx.OutputMode,
+				ctx.OutputMode,
 				ctx.ProjectDir,
 				assignmentName,
 				shouldForcePrepare,
