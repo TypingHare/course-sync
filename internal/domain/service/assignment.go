@@ -29,3 +29,20 @@ func (s *AssignmentService) AddAssignment(assignment *model.Assignment) error {
 
 	return s.repo.SaveAll(append(assignments, *assignment))
 }
+
+func (s *AssignmentService) GetAssignmentByName(
+	name string,
+) (*model.Assignment, error) {
+	assignments, err := s.repo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range assignments {
+		if assignments[i].Name == name {
+			return &assignments[i], nil
+		}
+	}
+
+	return nil, nil
+}
