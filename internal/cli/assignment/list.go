@@ -41,10 +41,8 @@ the --all flag to include submitted assignments as well.
 				table.Append([]string{
 					assignment.Name,
 					assignment.Title,
-					assignment.ReleasedAt.Local().
-						Format("2006-01-02 15:04 MST"),
-					assignment.DueAt.Local().Local().
-						Format("2006-01-02 15:04 MST"),
+					app.GetDateTimeString(assignment.ReleasedAt),
+					app.GetDateTimeString(assignment.DueAt),
 				})
 			}
 

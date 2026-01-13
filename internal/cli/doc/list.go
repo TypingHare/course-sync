@@ -35,11 +35,22 @@ By default, only assignments that have not been submitted are shown. Use the
 			}
 
 			table := tablewriter.NewWriter(os.Stdout)
-			table.Header([]string{"Name", "Title", "Path", "Is Default"})
+			table.Header(
+				[]string{
+					"Name",
+					"Title",
+					"Version",
+					"Released At",
+					"Path",
+					"Is Default",
+				},
+			)
 			for _, doc := range docs {
 				table.Append([]string{
 					doc.Name,
 					doc.Title,
+					doc.Version,
+					app.GetDateTimeString(doc.ReleasedAt),
 					doc.Path,
 					strconv.FormatBool(doc.IsDefault),
 				})
