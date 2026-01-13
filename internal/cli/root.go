@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func Cmd(ctx app.Context) *cobra.Command {
+func Cmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "csync",
 		Short: "Course Sync (csync)",
@@ -48,7 +48,7 @@ generated files and prevent tampering with submissions and metadata.
 		"suppress non-error output",
 	)
 
-	cmd.AddCommand(assignment.Cmd(&ctx))
+	cmd.AddCommand(assignment.Cmd(ctx))
 
 	return cmd
 }

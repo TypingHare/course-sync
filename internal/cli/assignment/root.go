@@ -19,7 +19,7 @@ assignments and preparing assignments for submission.
         `),
 	}
 
-	cmd.AddCommand(listCmd())
+	cmd.AddCommand(listCmd(ctx))
 
 	return cmd
 }

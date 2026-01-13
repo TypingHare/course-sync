@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func listCmd() *cobra.Command {
+func listCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all assignments",
@@ -25,7 +25,12 @@ By default, only assignments that have not yet been submitted are listed. Use
 the --all flag to include submitted assignments as well.
         `),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			assignments, err := app.GetAllAssignment()
+			assignmentService := app.GetAssignmentService(
+				app.GetAssignmentDataFile(
+					app.GetDataDir(ctx.ProjectDir),
+				),
+			)
+			assignments, err := assignmentService.GetAllAssignments()
 			if err != nil {
 				return fmt.Errorf("failed to get assignments: %w", err)
 			}

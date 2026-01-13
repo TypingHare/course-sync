@@ -9,8 +9,13 @@ import (
 )
 
 func main() {
-	ctx := app.Context{
-		Role: "student",
+	ctx, err := app.NewContext()
+	if err != nil {
+		fmt.Fprintln(
+			os.Stderr,
+			"Error initializing application context:", err,
+		)
+		os.Exit(1)
 	}
 
 	if err := cli.Cmd(ctx).Execute(); err != nil {
