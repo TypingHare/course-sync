@@ -5,6 +5,7 @@ type Role string
 
 // Defined user roles.
 const (
+	RoleUnknown    Role = "unknown"
 	RoleStudent    Role = "student"
 	RoleInstructor Role = "instructor"
 )
