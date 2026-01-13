@@ -38,23 +38,25 @@ generated files and prevent tampering with submissions and metadata.
 	}
 
 	cmd.SetVersionTemplate("{{.Version}}\n")
-	cmd.PersistentFlags().BoolVarP(
+	cmd.PersistentFlags().BoolVar(
 		&ctx.Verbose,
-		"verbose", "v", false,
+		"verbose", false,
 		"enable verbose output",
 	)
-	cmd.PersistentFlags().BoolVarP(
+	cmd.PersistentFlags().BoolVar(
 		&ctx.Quiet,
-		"quiet", "", false,
+		"quiet", false,
 		"suppress non-error output",
 	)
-	cmd.PersistentFlags().BoolVarP(
+	cmd.PersistentFlags().BoolVar(
 		&ctx.Plain,
-		"plain", "", false,
+		"plain", false,
 		"disable styled output",
 	)
 
 	cmd.AddCommand(contextCmd(ctx))
+	cmd.AddCommand(userCmd(ctx))
+	cmd.AddCommand(pathCmd(ctx))
 	cmd.AddCommand(assignment.Cmd(ctx))
 	cmd.AddCommand(doc.Cmd(ctx))
 
