@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/TypingHare/course-sync/internal/support/io"
 	"github.com/fatih/color"
@@ -90,6 +91,12 @@ func (t *CommandRunner) Start() (CommandRunnerResult, error) {
 	spinner := io.NewSpinner(os.Stdout, io.MakeOngoing(ongoingMessage))
 	if !t.outputMode.IsQuiet() {
 		spinner.Start()
+	}
+
+	// This is made intentional to allow students to read the ongoing message
+	// for a bit longer in verbose mode.
+	if t.outputMode.IsVerbose() {
+		time.Sleep(io.SpinnerFrameTime * 4)
 	}
 
 	// Execute the external command.

@@ -12,6 +12,8 @@ import (
 	"golang.org/x/term"
 )
 
+const SpinnerFrameTime = 60 * time.Millisecond
+
 // Spinner renders a terminal-based loading indicator while background work is
 // in progress.
 //
@@ -51,7 +53,7 @@ func NewSpinner(out io.Writer, message string) *Spinner {
 		message:  message,
 		numLines: strings.Count(message, "\n") + 1,
 		frames:   []rune{'⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'},
-		delay:    60 * time.Millisecond,
+		delay:    SpinnerFrameTime,
 		stopChan: make(chan struct{}),
 		doneChan: make(chan struct{}),
 	}
