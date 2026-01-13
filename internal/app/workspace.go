@@ -8,8 +8,14 @@ import (
 	"github.com/TypingHare/course-sync/internal/support/io"
 )
 
-func GetUserWorkspaceDir(
-	outputMode io.OutputMode,
+const PrototypeWorkspaceName = "[prototype]"
+
+func GetWorkspaceDir(srcDir string, workspaceName string) string {
+	return filepath.Join(srcDir, workspaceName)
+}
+
+func GetStudentWorkspaceDir(
+	outputMode *io.OutputMode,
 	srcDir string,
 ) (string, error) {
 	gitUsername, err := exec.GitGetUsername(outputMode)
@@ -17,8 +23,10 @@ func GetUserWorkspaceDir(
 		return "", fmt.Errorf("get git username: %w", err)
 	}
 
-	studentName := gitUsername
-	workspaceDirName := GetStudentDirName(studentName)
+	studentDirName := GetStudentDirName(gitUsername)
+	return GetWorkspaceDir(srcDir, studentDirName), nil
+}
 
-	return filepath.Join(srcDir, workspaceDirName), nil
+func GetPrototypeWorkspaceDir(srcDir string) string {
+	return GetWorkspaceDir(srcDir, PrototypeWorkspaceName)
 }

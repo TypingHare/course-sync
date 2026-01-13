@@ -11,8 +11,6 @@ const AppDataDirName = ".csync"
 
 const GitRepositoryDirName = ".git"
 
-const AssignmentDataFileName = "assignments.json"
-
 const InstructorPrivateKeyFileName = "instructor"
 
 const InstructorPublicKeyFileName = "instructor.pub"
@@ -73,8 +71,8 @@ func GetDataDir(projectDir string) string {
 	return filepath.Join(projectDir, AppDataDirName)
 }
 
-func GetAssignmentDataFile(dataDir string) string {
-	return filepath.Join(dataDir, AssignmentDataFileName)
+func GetSrcDir(projectDir string) string {
+	return filepath.Join(projectDir, "src")
 }
 
 func GetInstructorPrivateKeyFile(appDataDir string) string {

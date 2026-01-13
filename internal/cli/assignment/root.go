@@ -20,6 +20,7 @@ assignments and preparing assignments for submission.
 	}
 
 	cmd.AddCommand(listCmd(ctx))
+	cmd.AddCommand(prepareCmd(ctx))
 
 	return cmd
 }
