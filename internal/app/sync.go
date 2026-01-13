@@ -35,9 +35,9 @@ func Commit(role model.Role, outputMode *io.OutputMode, dataDir string) error {
 }
 
 func Pull(role model.Role, outputMode *io.OutputMode, dataDir string) error {
-	return nil
+	return exec.GitPull(outputMode, true)
 }
 
 func Push(role model.Role, outputMode *io.OutputMode, dataDir string) error {
-	return nil
+	return exec.GitPush(outputMode)
 }
