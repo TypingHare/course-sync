@@ -15,11 +15,13 @@ func NewAssignmentService(repo repo.IAssignmentRepo) *AssignmentService {
 	}
 }
 
+func (s *AssignmentService) GetAllAssignments() ([]model.Assignment, error) {
+	return s.repo.GetAll()
+}
+
 // AddAssignment adds a new assignment to the existing list of assignments and
 // saves the updated list back to the repository.
-func (s *AssignmentService) AddAssignment(
-	assignment *model.Assignment,
-) error {
+func (s *AssignmentService) AddAssignment(assignment *model.Assignment) error {
 	assignments, err := s.repo.GetAll()
 	if err != nil {
 		return err
