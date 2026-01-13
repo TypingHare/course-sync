@@ -2,7 +2,6 @@ package doc
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 
@@ -34,7 +33,7 @@ By default, only assignments that have not been submitted are shown. Use the
 				return fmt.Errorf("failed to retrieve docs: %w", err)
 			}
 
-			table := tablewriter.NewWriter(os.Stdout)
+			table := tablewriter.NewWriter(cmd.OutOrStdout())
 			table.Header(
 				[]string{
 					"Name",

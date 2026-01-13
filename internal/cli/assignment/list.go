@@ -2,7 +2,6 @@ package assignment
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/TypingHare/course-sync/internal/app"
@@ -35,7 +34,7 @@ the --all flag to include submitted assignments as well.
 				return fmt.Errorf("failed to get assignments: %w", err)
 			}
 
-			table := tablewriter.NewWriter(os.Stdout)
+			table := tablewriter.NewWriter(cmd.OutOrStdout())
 			table.Header([]string{"Name", "Title", "Released At", "Due At"})
 			for _, assignment := range assignments {
 				table.Append([]string{
