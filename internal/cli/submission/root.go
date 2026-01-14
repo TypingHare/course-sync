@@ -19,7 +19,8 @@ and creating new submissions.
         `),
 	}
 
-	cmd.AddCommand(listCmd(ctx), createCmd(ctx))
+	cmd.AddCommand(listCmd(ctx))
+	cmd.AddCommand(createCmd(ctx))
 
 	return cmd
 }

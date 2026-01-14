@@ -4,8 +4,24 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/TypingHare/course-sync/internal/adapter/repo/jsonstore"
+	"github.com/TypingHare/course-sync/internal/domain/service"
 	"github.com/iancoleman/strcase"
 )
+
+const StudentDataFileName = "students.json"
+
+func GetStudentDataFile(dataDir string) string {
+	return filepath.Join(dataDir, StudentDataFileName)
+}
+
+func GetStudentService(
+	studentDataFile string,
+) *service.StudentService {
+	return service.NewStudentService(
+		jsonstore.NewStudentRepo(studentDataFile),
+	)
+}
 
 // GetStudentDirName returns the directory name for a student by converting the
 // student's name to kebab-case.
