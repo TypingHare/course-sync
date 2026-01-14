@@ -22,5 +22,9 @@ assignments and preparing assignments for submission.
 	cmd.AddCommand(listCmd(ctx))
 	cmd.AddCommand(prepareCmd(ctx))
 
+	if ctx.IsInstructor() {
+		cmd.AddCommand(assignCmd(ctx))
+	}
+
 	return cmd
 }

@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/TypingHare/course-sync/internal/adapter/repo/jsonstore"
+	"github.com/TypingHare/course-sync/internal/domain/model"
 	"github.com/TypingHare/course-sync/internal/domain/service"
 	"github.com/TypingHare/course-sync/internal/support/exec"
 	"github.com/TypingHare/course-sync/internal/support/filesystem"
@@ -147,6 +148,99 @@ func PrepareAssignment(
 	)
 	if err != nil {
 		return fmt.Errorf("copy prototype assignment: %w", err)
+	}
+
+	return nil
+}
+
+func Assign(
+	outputMode *io.OutputMode,
+	projectDir string,
+	newAssignment *model.Assignment,
+) error {
+	assignmentDataFile := GetAssignmentDataFile(GetDataDir(projectDir))
+	assignmentService := GetAssignmentService(assignmentDataFile)
+
+	err := assignmentService.AddAssignment(newAssignment)
+	if err != nil {
+		return fmt.Errorf("add assignment: %w", err)
+	}
+
+	// Check if the prototype assignment directory exists.
+	prototypeAssignmentDir := GetPrototypeAssignmentDir(
+		GetSrcDir(projectDir),
+		newAssignment.Name,
+	)
+	prototypeAssignmentDirExists, err := filesystem.DirExists(
+		prototypeAssignmentDir,
+	)
+	if err != nil {
+		return fmt.Errorf("check prototype assignment directory: %w", err)
+	} else if !prototypeAssignmentDirExists {
+		return fmt.Errorf(
+			"prototype assignment directory %q does not exist",
+			prototypeAssignmentDir,
+		)
+	}
+
+	// Get all students.
+	studentService := GetStudentService(
+		GetStudentDataFile(GetDataDir(projectDir)),
+	)
+	students, err := studentService.GetAllStudents()
+	if err != nil {
+		return fmt.Errorf("get students: %w", err)
+	}
+
+	// Distribute the assignment data file to student repositories.
+	assignmentDataFileRelPath, err := filepath.Rel(
+		projectDir,
+		assignmentDataFile,
+	)
+	if err != nil {
+		return fmt.Errorf(
+			"get relative path of assignment data file: %w",
+			err,
+		)
+	}
+
+	err = DistributeFileToStudentRepos(
+		outputMode,
+		students,
+		projectDir,
+		assignmentDataFileRelPath,
+	)
+	if err != nil {
+		return fmt.Errorf(
+			"distribute assignment to student repositories: %w",
+			err,
+		)
+	}
+
+	// Distribute the prototype assignment directory to student
+	// repositories.
+	prototypeAssignmentDirRelPath, err := filepath.Rel(
+		projectDir,
+		prototypeAssignmentDir,
+	)
+	if err != nil {
+		return fmt.Errorf(
+			"get relative path of prototype assignment directory: %w",
+			err,
+		)
+	}
+
+	err = DistributeDirToStudentRepos(
+		outputMode,
+		students,
+		projectDir,
+		prototypeAssignmentDirRelPath,
+	)
+	if err != nil {
+		return fmt.Errorf(
+			"distribute assignment directory to student repositories: %w",
+			err,
+		)
 	}
 
 	return nil

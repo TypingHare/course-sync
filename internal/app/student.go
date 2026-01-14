@@ -8,7 +8,8 @@ import (
 	"github.com/TypingHare/course-sync/internal/adapter/repo/jsonstore"
 	"github.com/TypingHare/course-sync/internal/domain/model"
 	"github.com/TypingHare/course-sync/internal/domain/service"
-	"github.com/TypingHare/course-sync/internal/support/filesystem"
+	"github.com/TypingHare/course-sync/internal/support/exec"
+	"github.com/TypingHare/course-sync/internal/support/io"
 	"github.com/iancoleman/strcase"
 )
 
@@ -54,6 +55,7 @@ func GetStudentFiles(dataDir string) []string {
 }
 
 func DistributeFileToStudentRepos(
+	outputMode *io.OutputMode,
 	students []model.Student,
 	projectDir string,
 	relPath string,
@@ -66,14 +68,72 @@ func DistributeFileToStudentRepos(
 		)
 	}
 
-	absPath := filepath.Join(projectDir, relPath)
+	srcAbsPath := filepath.Join(projectDir, relPath)
 
 	for i := range studentRepoDirs {
-		destPath := filepath.Join(studentRepoDirs[i], relPath)
-		err := filesystem.CopyFile(absPath, destPath)
+		destAbsPath := filepath.Join(studentRepoDirs[i], relPath)
+		err := exec.ShellEnsureDir(
+			outputMode,
+			projectDir,
+			filepath.Dir(destAbsPath),
+		)
 		if err != nil {
-			return fmt.Errorf("copy file to %s: %w", destPath, err)
+			return fmt.Errorf("ensure dir for %s: %w", destAbsPath, err)
 		}
+
+		err = exec.ShellCopyFile(
+			outputMode,
+			projectDir,
+			srcAbsPath,
+			destAbsPath,
+		)
+	}
+
+	return nil
+}
+
+func DistributeDirToStudentRepos(
+	outputMode *io.OutputMode,
+	students []model.Student,
+	projectDir string,
+	relPath string,
+) error {
+	var studentRepoDirs []string
+	for i := range students {
+		studentRepoDirs = append(
+			studentRepoDirs,
+			GetStudentRepoDir(projectDir, students[i].Name),
+		)
+	}
+
+	srcAbsPath := filepath.Join(projectDir, relPath)
+
+	for i := range studentRepoDirs {
+		destAbsPath := filepath.Join(studentRepoDirs[i], relPath)
+		err := exec.ShellDeleteDir(
+			outputMode,
+			projectDir,
+			destAbsPath,
+		)
+		if err != nil {
+			return fmt.Errorf("delete dir for %s: %w", destAbsPath, err)
+		}
+
+		err = exec.ShellEnsureDir(
+			outputMode,
+			projectDir,
+			filepath.Dir(destAbsPath),
+		)
+		if err != nil {
+			return fmt.Errorf("ensure dir for %s: %w", destAbsPath, err)
+		}
+
+		err = exec.ShellCopyDir(
+			outputMode,
+			projectDir,
+			srcAbsPath,
+			destAbsPath,
+		)
 	}
 
 	return nil

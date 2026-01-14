@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/TypingHare/course-sync/internal/domain/model"
 	"github.com/TypingHare/course-sync/internal/domain/repo"
 )
@@ -25,6 +27,15 @@ func (s *AssignmentService) AddAssignment(assignment *model.Assignment) error {
 	assignments, err := s.repo.GetAll()
 	if err != nil {
 		return err
+	}
+
+	for i := range assignments {
+		if assignments[i].Name == assignment.Name {
+			return fmt.Errorf(
+				"assignment with name %q already exists",
+				assignment.Name,
+			)
+		}
 	}
 
 	return s.repo.SaveAll(append(assignments, *assignment))
