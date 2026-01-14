@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"github.com/TypingHare/course-sync/internal/support/filesystem"
 	"github.com/TypingHare/course-sync/internal/support/io"
 )
 
@@ -55,15 +56,8 @@ func ShellCopyDir(
 	absSrcDir string,
 	absDestDir string,
 ) error {
-	relSrcDir, err := filepath.Rel(projectDir, absSrcDir)
-	if err != nil {
-		return fmt.Errorf("get relative source path: %w", err)
-	}
-
-	relDestDir, err := filepath.Rel(projectDir, absDestDir)
-	if err != nil {
-		return fmt.Errorf("get relative destination path: %w", err)
-	}
+	relSrcDir := filesystem.RelOrOriginal(projectDir, absSrcDir)
+	relDestDir := filesystem.RelOrOriginal(projectDir, absDestDir)
 
 	return NewCommandRunner(
 		outputMode,
@@ -78,6 +72,32 @@ func ShellCopyDir(
 			"Failed to copy directory from %q to %q.",
 			relSrcDir,
 			relDestDir,
+		),
+	).StartE()
+}
+
+func ShellCopyFile(
+	outputMode *io.OutputMode,
+	projectDir string,
+	absSrcFile string,
+	absDestFile string,
+) error {
+	relSrcFile := filesystem.RelOrOriginal(projectDir, absSrcFile)
+	relDestFile := filesystem.RelOrOriginal(projectDir, absDestFile)
+
+	return NewCommandRunner(
+		outputMode,
+		[]string{"cp", absSrcFile, absDestFile},
+		fmt.Sprintf(
+			"Copying file from %q to %q...",
+			relSrcFile,
+			relDestFile,
+		),
+		fmt.Sprintf("Copied file from %q to %q.", relSrcFile, relDestFile),
+		fmt.Sprintf(
+			"Failed to copy file from %q to %q.",
+			relSrcFile,
+			relDestFile,
 		),
 	).StartE()
 }

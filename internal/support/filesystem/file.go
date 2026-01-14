@@ -42,3 +42,14 @@ func CopyFile(srcPath, destPath string) error {
 	_, err = io.Copy(destFile, srcFile)
 	return err
 }
+
+// RelOrOriginal returns the relative path from baseDir to path. If the relative
+// path cannot be determined, it returns the original path.
+func RelOrOriginal(baseDir, path string) string {
+	relPath, err := filepath.Rel(baseDir, path)
+	if err != nil {
+		return path
+	}
+
+	return relPath
+}
