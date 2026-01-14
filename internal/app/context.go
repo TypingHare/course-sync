@@ -42,3 +42,11 @@ func NewContext() (*Context, error) {
 		Role:       role,
 	}, nil
 }
+
+func (c *Context) IsInstructor() bool {
+	return c.Role == model.RoleInstructor
+}
+
+func (c *Context) IsStudent() bool {
+	return c.Role == model.RoleStudent
+}
