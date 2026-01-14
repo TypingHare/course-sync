@@ -19,7 +19,8 @@ viewing feedback for specific submissions.
         `),
 	}
 
-	cmd.AddCommand(listCmd(ctx), showCmd(ctx))
+	cmd.AddCommand(listCmd(ctx))
+	cmd.AddCommand(showCmd(ctx))
 
 	return cmd
 }

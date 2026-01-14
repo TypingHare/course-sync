@@ -19,7 +19,9 @@ available documents and opening specific documents.
         `),
 	}
 
-	cmd.AddCommand(listCmd(ctx), defaultCmd(ctx), openCmd(ctx))
+	cmd.AddCommand(listCmd(ctx))
+	cmd.AddCommand(defaultCmd(ctx))
+	cmd.AddCommand(openCmd(ctx))
 
 	return cmd
 }
