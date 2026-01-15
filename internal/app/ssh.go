@@ -63,10 +63,35 @@ func GenerateInstructorKeyPair(
 		return err
 	} else if instructorPublicKeyFileExists {
 		return fmt.Errorf(
-			"instructor public key file exists at %s; "+
+			"instructor public key file exists at %q; "+
 				"delete it first to regenerate keys",
 			instructorPublicKeyFile,
 		)
+	}
+
+	if instructorPrivateKeyFileExists, err := filesystem.FileExists(
+		filepath.Join(dataDir, InstructorPrivateKeyFileName),
+	); err != nil {
+		return err
+	} else if instructorPrivateKeyFileExists {
+		if !force {
+			return fmt.Errorf(
+				"%s", "instructor private key file exists at %q"+
+					filepath.Join(dataDir, InstructorPrivateKeyFileName),
+			)
+		}
+
+		err := exec.ShellDeleteFile(
+			outputMode,
+			projectDir,
+			filepath.Join(dataDir, InstructorPrivateKeyFileName),
+		)
+		if err != nil {
+			return fmt.Errorf(
+				"delete existing instructor private key file: %w",
+				err,
+			)
+		}
 	}
 
 	instructorPrivateKeyFile := filepath.Join(

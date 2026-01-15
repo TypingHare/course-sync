@@ -8,6 +8,25 @@ import (
 	"github.com/TypingHare/course-sync/internal/support/io"
 )
 
+func ShellDeleteFile(
+	outputMode *io.OutputMode,
+	projectDir string,
+	absFile string,
+) error {
+	relFile, err := filepath.Rel(projectDir, absFile)
+	if err != nil {
+		return fmt.Errorf("get relative path: %w", err)
+	}
+
+	return NewCommandRunner(
+		outputMode,
+		[]string{"rm", "-f", absFile},
+		fmt.Sprintf("Deleting file %q...", relFile),
+		fmt.Sprintf("Deleted file %q.", relFile),
+		fmt.Sprintf("Failed to delete file %q.", relFile),
+	).StartE()
+}
+
 // ShellDeleteDir deletes the specified directory using a shell command.
 func ShellDeleteDir(
 	outputMode *io.OutputMode,

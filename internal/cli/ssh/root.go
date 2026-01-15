@@ -17,12 +17,11 @@ Manage SSH keys used by Course Sync.
 This command provides access to ssh-related actions, such as generating new
 instructor SSH keys.
         `),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return nil
-		},
 	}
 
-	cmd.AddCommand(keygenCmd(ctx))
+	if ctx.IsInstructor() {
+		cmd.AddCommand(keygenCmd(ctx))
+	}
 
 	return cmd
 }
