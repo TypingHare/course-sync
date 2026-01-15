@@ -2,7 +2,6 @@ package exec
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/TypingHare/course-sync/internal/support/filesystem"
 	"github.com/TypingHare/course-sync/internal/support/io"
@@ -13,10 +12,7 @@ func ShellDeleteFile(
 	projectDir string,
 	absFile string,
 ) error {
-	relFile, err := filepath.Rel(projectDir, absFile)
-	if err != nil {
-		return fmt.Errorf("get relative path: %w", err)
-	}
+	relFile := filesystem.RelOrOriginal(projectDir, absFile)
 
 	return NewCommandRunner(
 		outputMode,
@@ -33,10 +29,7 @@ func ShellDeleteDir(
 	projectDir string,
 	absDir string,
 ) error {
-	relDir, err := filepath.Rel(projectDir, absDir)
-	if err != nil {
-		return fmt.Errorf("get relative path: %w", err)
-	}
+	relDir := filesystem.RelOrOriginal(projectDir, absDir)
 
 	return NewCommandRunner(
 		outputMode,
@@ -53,10 +46,7 @@ func ShellEnsureDir(
 	projectDir string,
 	absDir string,
 ) error {
-	relDir, err := filepath.Rel(projectDir, absDir)
-	if err != nil {
-		return fmt.Errorf("get relative path: %w", err)
-	}
+	relDir := filesystem.RelOrOriginal(projectDir, absDir)
 
 	return NewCommandRunner(
 		outputMode,
