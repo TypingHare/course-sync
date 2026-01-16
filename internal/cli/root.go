@@ -60,6 +60,7 @@ generated files and prevent tampering with submissions and metadata.
 
 	cmd.AddCommand(contextCmd(ctx))
 	cmd.AddCommand(userCmd(ctx))
+	cmd.AddCommand(filesCmd(ctx))
 	cmd.AddCommand(pathCmd(ctx))
 	cmd.AddCommand(syncCmd(ctx))
 	cmd.AddCommand(assignment.Cmd(ctx))

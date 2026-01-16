@@ -5,9 +5,9 @@ import (
 	"github.com/TypingHare/course-sync/internal/support/filesystem"
 )
 
-func GetRole(appDataDir string) (model.Role, error) {
+func GetRole(dataDir string) (model.Role, error) {
 	isinstructor, err := filesystem.FileExists(
-		GetInstructorPrivateKeyFile(appDataDir),
+		GetInstructorPrivateKeyFile(dataDir),
 	)
 	if err != nil {
 		return model.RoleUnknown, err

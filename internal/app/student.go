@@ -48,7 +48,9 @@ func GetStudentDirName(studentName string) string {
 }
 
 // GetStudentFiles returns a list of file paths related to student data.
-func GetStudentFiles(dataDir string) []string {
+func GetStudentFiles(projectDir string) []string {
+	dataDir := GetDataDir(projectDir)
+
 	return []string{
 		filepath.Join(dataDir, SubmissionDataFileName),
 	}

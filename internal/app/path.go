@@ -83,6 +83,10 @@ func GetDocsDir(projectDir string) string {
 	return filepath.Join(projectDir, DocsDirName)
 }
 
-func GetInstructorPrivateKeyFile(appDataDir string) string {
-	return filepath.Join(appDataDir, InstructorPrivateKeyFileName)
+func GetInstructorPrivateKeyFile(dataDir string) string {
+	return filepath.Join(dataDir, InstructorPrivateKeyFileName)
+}
+
+func GetInstructorPublicKeyFile(dataDir string) string {
+	return filepath.Join(dataDir, InstructorPublicKeyFileName)
 }
