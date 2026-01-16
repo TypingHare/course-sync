@@ -18,8 +18,19 @@ var (
 func filesCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "files",
-		Short: "Display files users manage",
-		Long:  strings.TrimSpace(``),
+		Short: "Show files managed by each role",
+		Long: strings.TrimSpace(`
+List the paths that Course Sync treats as role-managed files.
+
+Student-managed files are the ones students are expected to modify and sync.
+Instructor-managed files are owned by the instructor and are restored for
+students during sync operations.
+
+Each line is a path relative to the project root. If a path is a directory,
+all files under that directory are considered managed.
+
+Use --student or --instructor to show the list for a specific role.
+        `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			role := ctx.Role
 			if shouldDisplayStudentFiles {
