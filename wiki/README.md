@@ -1,5 +1,7 @@
 # Course Sync Wiki
 
-## Style Guide
+## Documentation
 
-- [Go Style Decisions](https://google.github.io/styleguide/go/decisions.html)
+- [Style Guide](./style_guide.md)
+- [Student Guide](./student_guide.md)
+- [Instructor Guide](./instructor_guide.md)
