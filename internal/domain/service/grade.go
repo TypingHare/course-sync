@@ -9,14 +9,17 @@ type GradeService struct {
 	repo repo.IGradeRepo
 }
 
+// NewGradeService constructs a GradeService with the provided repo.
 func NewGradeService(r repo.IGradeRepo) *GradeService {
 	return &GradeService{repo: r}
 }
 
+// GetAllGrades retrieves all grades from the repository.
 func (s *GradeService) GetAllGrades() ([]model.Grade, error) {
 	return s.repo.GetAll()
 }
 
+// GetGradeBySubmissionHash finds a grade by submission hash.
 func (s *GradeService) GetGradeBySubmissionHash(
 	submissionHash string,
 ) (*model.Grade, error) {
@@ -34,6 +37,7 @@ func (s *GradeService) GetGradeBySubmissionHash(
 	return nil, nil
 }
 
+// GetLastGradeByAssignmentName returns the most recent grade for an assignment.
 func (s *GradeService) GetLastGradeByAssignmentName(
 	assignmentName string,
 ) (*model.Grade, error) {

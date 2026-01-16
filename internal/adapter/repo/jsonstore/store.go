@@ -14,10 +14,12 @@ type JsonStore[T any] struct {
 	filePath string
 }
 
+// NewJsonStore constructs a JsonStore that persists to filePath.
 func NewJsonStore[T any](filePath string) *JsonStore[T] {
 	return &JsonStore[T]{filePath: filePath}
 }
 
+// Read loads the stored value from disk, returning the zero value if missing.
 func (s *JsonStore[T]) Read() (T, error) {
 	var zero T
 
@@ -44,6 +46,7 @@ func (s *JsonStore[T]) Read() (T, error) {
 	return value, nil
 }
 
+// Write persists the value to disk using an atomic replace.
 func (s *JsonStore[T]) Write(value T) error {
 	// Ensure parent directory exists.
 	dir := filepath.Dir(s.filePath)

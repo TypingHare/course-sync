@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Cmd builds the root CLI command.
 func Cmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "csync",

@@ -9,6 +9,7 @@ import (
 
 var shouldForceKeygen bool = false
 
+// keygenCmd builds the ssh keygen subcommand.
 func keygenCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "keygen",

@@ -17,6 +17,7 @@ var (
 	shouldDisplayStudentWorkspaceDir   bool
 )
 
+// pathCmd builds the path subcommand.
 func pathCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "path",

@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// createCmd builds the submission create subcommand.
 func createCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create <assignment-name>",

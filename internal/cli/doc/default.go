@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// defaultCmd builds the doc default subcommand.
 func defaultCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "default",

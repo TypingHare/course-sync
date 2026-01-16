@@ -11,12 +11,14 @@ type AssignmentService struct {
 	repo repo.IAssignmentRepo
 }
 
+// NewAssignmentService constructs an AssignmentService with the provided repo.
 func NewAssignmentService(repo repo.IAssignmentRepo) *AssignmentService {
 	return &AssignmentService{
 		repo: repo,
 	}
 }
 
+// GetAllAssignments retrieves all assignments from the repository.
 func (s *AssignmentService) GetAllAssignments() ([]model.Assignment, error) {
 	return s.repo.GetAll()
 }
@@ -41,6 +43,7 @@ func (s *AssignmentService) AddAssignment(assignment *model.Assignment) error {
 	return s.repo.SaveAll(append(assignments, *assignment))
 }
 
+// GetAssignmentByName finds an assignment by name.
 func (s *AssignmentService) GetAssignmentByName(
 	name string,
 ) (*model.Assignment, error) {

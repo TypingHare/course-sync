@@ -19,6 +19,7 @@ const InstructorPrivateKeyFileName = "instructor"
 
 const InstructorPublicKeyFileName = "instructor.pub"
 
+// FindProjectDir walks upward from startDir to find the git project root.
 func FindProjectDir(startDir string) (string, error) {
 	var err error
 	originalStart := startDir
@@ -71,22 +72,27 @@ func FindProjectDir(startDir string) (string, error) {
 	)
 }
 
+// GetDataDir returns the application data directory under the project.
 func GetDataDir(projectDir string) string {
 	return filepath.Join(projectDir, AppDataDirName)
 }
 
+// GetSrcDir returns the source directory under the project.
 func GetSrcDir(projectDir string) string {
 	return filepath.Join(projectDir, SrcDirName)
 }
 
+// GetDocsDir returns the docs directory under the project.
 func GetDocsDir(projectDir string) string {
 	return filepath.Join(projectDir, DocsDirName)
 }
 
+// GetInstructorPrivateKeyFile returns the instructor private key file path.
 func GetInstructorPrivateKeyFile(dataDir string) string {
 	return filepath.Join(dataDir, InstructorPrivateKeyFileName)
 }
 
+// GetInstructorPublicKeyFile returns the instructor public key file path.
 func GetInstructorPublicKeyFile(dataDir string) string {
 	return filepath.Join(dataDir, InstructorPublicKeyFileName)
 }

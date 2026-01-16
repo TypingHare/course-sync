@@ -13,6 +13,7 @@ import (
 
 var submissionHash string
 
+// showCmd builds the grade show subcommand.
 func showCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "show [assignment-name]",

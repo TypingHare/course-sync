@@ -7,6 +7,7 @@ import (
 	"github.com/TypingHare/course-sync/internal/support/io"
 )
 
+// ShellDeleteFile deletes the specified file using a shell command.
 func ShellDeleteFile(
 	outputMode *io.OutputMode,
 	projectDir string,
@@ -85,6 +86,7 @@ func ShellCopyDir(
 	).StartE()
 }
 
+// ShellCopyFile copies a file from source to destination using a shell command.
 func ShellCopyFile(
 	outputMode *io.OutputMode,
 	projectDir string,

@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// listCmd builds the grade list subcommand.
 func listCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",

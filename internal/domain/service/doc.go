@@ -9,14 +9,17 @@ type DocService struct {
 	repo repo.IDocRepo
 }
 
+// NewDocService constructs a DocService with the provided repo.
 func NewDocService(r repo.IDocRepo) *DocService {
 	return &DocService{repo: r}
 }
 
+// GetAllDocs retrieves all docs from the repository.
 func (s *DocService) GetAllDocs() ([]model.Doc, error) {
 	return s.repo.GetAll()
 }
 
+// GetDocByName finds a doc by name.
 func (s *DocService) GetDocByName(name string) (*model.Doc, error) {
 	docs, err := s.repo.GetAll()
 	if err != nil {
@@ -35,6 +38,7 @@ func (s *DocService) GetDocByName(name string) (*model.Doc, error) {
 	return nil, nil
 }
 
+// GetDefaultDoc returns the doc marked as default.
 func (s *DocService) GetDefaultDoc() (*model.Doc, error) {
 	docs, err := s.repo.GetAll()
 	if err != nil {

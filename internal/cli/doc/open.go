@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// openCmd builds the doc open subcommand.
 func openCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "open [doc-name]",

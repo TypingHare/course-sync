@@ -14,10 +14,14 @@ import (
 
 const AssignmentDataFileName = "assignments.json"
 
+// GetAssignmentDataFile returns the assignments data file path under the given
+// data directory.
 func GetAssignmentDataFile(dataDir string) string {
 	return filepath.Join(dataDir, AssignmentDataFileName)
 }
 
+// GetAssignmentService constructs an AssignmentService backed by the given
+// data file.
 func GetAssignmentService(
 	assignmentDataFile string,
 ) *service.AssignmentService {
@@ -41,6 +45,7 @@ func GetUserAssignmentDir(
 	return filepath.Join(userWorkspaceDir, assignmentName), nil
 }
 
+// GetPrototypeAssignmentDir returns the prototype assignment directory path.
 func GetPrototypeAssignmentDir(
 	srcDir string,
 	assignmentName string,
@@ -48,6 +53,7 @@ func GetPrototypeAssignmentDir(
 	return filepath.Join(GetPrototypeWorkspaceDir(srcDir), assignmentName)
 }
 
+// PrepareAssignment copies the prototype assignment into the user's workspace.
 func PrepareAssignment(
 	outputMode *io.OutputMode,
 	projectDir string,
@@ -153,6 +159,8 @@ func PrepareAssignment(
 	return nil
 }
 
+// Assign registers a new assignment and distributes related files to student
+// repos.
 func Assign(
 	outputMode *io.OutputMode,
 	projectDir string,

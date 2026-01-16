@@ -11,14 +11,17 @@ type SubmissionService struct {
 	repo repo.ISubmissionRepo
 }
 
+// NewSubmissionService constructs a SubmissionService with the provided repo.
 func NewSubmissionService(r repo.ISubmissionRepo) *SubmissionService {
 	return &SubmissionService{repo: r}
 }
 
+// GetAllSubmissions retrieves all submissions from the repository.
 func (s *SubmissionService) GetAllSubmissions() ([]model.Submission, error) {
 	return s.repo.GetAll()
 }
 
+// AddSubmission appends a new submission to the repository.
 func (s *SubmissionService) AddSubmission(
 	submission *model.Submission,
 ) error {

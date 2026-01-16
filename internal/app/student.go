@@ -19,6 +19,7 @@ const StudentDataFileName = "students.json"
 // the master repository
 const StudentRepoBaseDir = "student-repos/"
 
+// GetStudentDataFile returns the students data file path.
 func GetStudentDataFile(dataDir string) string {
 	return filepath.Join(dataDir, StudentDataFileName)
 }
@@ -33,6 +34,7 @@ func GetStudentRepoDir(projectDir string, studentName string) string {
 	)
 }
 
+// GetStudentService constructs a StudentService backed by the data file.
 func GetStudentService(
 	studentDataFile string,
 ) *service.StudentService {
@@ -56,6 +58,7 @@ func GetStudentFiles(projectDir string) []string {
 	}
 }
 
+// DistributeFileToStudentRepos copies a file into each student repository.
 func DistributeFileToStudentRepos(
 	outputMode *io.OutputMode,
 	students []model.Student,
@@ -94,6 +97,7 @@ func DistributeFileToStudentRepos(
 	return nil
 }
 
+// DistributeDirToStudentRepos replaces a directory in each student repository.
 func DistributeDirToStudentRepos(
 	outputMode *io.OutputMode,
 	students []model.Student,

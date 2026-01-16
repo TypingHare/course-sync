@@ -15,10 +15,12 @@ import (
 
 const SubmissionDataFileName = "submissions.json"
 
+// GetSubmissionDataFile returns the submissions data file path.
 func GetSubmissionDataFile(dataDir string) string {
 	return filepath.Join(dataDir, SubmissionDataFileName)
 }
 
+// GetSubmissionService constructs a SubmissionService backed by the data file.
 func GetSubmissionService(
 	submissionDataFile string,
 ) *service.SubmissionService {

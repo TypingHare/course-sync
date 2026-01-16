@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// contextCmd builds the context subcommand.
 func contextCmd(ctx *app.Context) *cobra.Command {
 	return &cobra.Command{
 		Use:   "context",

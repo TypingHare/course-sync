@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Cmd builds the doc command group.
 func Cmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "doc",

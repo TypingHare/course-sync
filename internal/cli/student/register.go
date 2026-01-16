@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// registerCmd builds the student register subcommand.
 func registerCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "register <name> <email> <repository-url>",

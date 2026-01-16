@@ -9,6 +9,7 @@ import (
 	"github.com/fatih/color"
 )
 
+// main initializes the application context and executes the CLI.
 func main() {
 	ctx, err := app.NewContext()
 	if err != nil {
@@ -22,6 +23,7 @@ func main() {
 	}
 }
 
+// printErrorAndExit reports the error and exits with a non-zero status.
 func printErrorAndExit(err error) {
 	if err == nil {
 		return

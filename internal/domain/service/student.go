@@ -11,16 +11,19 @@ type StudentService struct {
 	repo repo.IStudentRepo
 }
 
+// NewStudentService constructs a StudentService with the provided repo.
 func NewStudentService(studentRepo repo.IStudentRepo) *StudentService {
 	return &StudentService{
 		repo: studentRepo,
 	}
 }
 
+// GetAllStudents retrieves all students from the repository.
 func (s *StudentService) GetAllStudents() ([]model.Student, error) {
 	return s.repo.GetAll()
 }
 
+// AddStudent appends a new student to the repository.
 func (s *StudentService) AddStudent(
 	student *model.Student,
 ) error {
@@ -32,6 +35,7 @@ func (s *StudentService) AddStudent(
 	return s.repo.SaveAll(append(students, *student))
 }
 
+// GetNextStudentID returns the next available student ID.
 func (s *StudentService) GetNextStudentID() (int, error) {
 	students, err := s.repo.GetAll()
 	if err != nil {

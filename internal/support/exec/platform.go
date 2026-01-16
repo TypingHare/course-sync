@@ -8,6 +8,7 @@ import (
 	"github.com/TypingHare/course-sync/internal/support/io"
 )
 
+// OpenFile opens the given file path using the OS default handler.
 func OpenFile(
 	outputMode *io.OutputMode,
 	projectDir string,

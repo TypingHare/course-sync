@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// assignCmd builds the assignment assign subcommand.
 func assignCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "assign <name> <title> <due-at>",

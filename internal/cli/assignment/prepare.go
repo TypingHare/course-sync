@@ -10,6 +10,7 @@ import (
 
 var shouldForcePrepare bool
 
+// prepareCmd builds the assignment prepare subcommand.
 func prepareCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "prepare <assignment-name>",

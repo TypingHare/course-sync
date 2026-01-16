@@ -14,6 +14,7 @@ var (
 	shouldDisplayInstructorFiles bool
 )
 
+// filesCmd builds the files subcommand.
 func filesCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "files",

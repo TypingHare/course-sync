@@ -11,6 +11,7 @@ import (
 
 var shouldDisplayUserDirname bool
 
+// userCmd builds the user subcommand.
 func userCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "user",

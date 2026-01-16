@@ -14,6 +14,7 @@ var (
 	shouldPushOnly   bool
 )
 
+// syncCmd builds the sync subcommand.
 func syncCmd(ctx *app.Context) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "sync",
