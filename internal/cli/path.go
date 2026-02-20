@@ -59,6 +59,8 @@ Key paths include:
 Use the flags below to display the paths to individual files or directories.
         `),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			srcDir := app.GetSrcDir(ctx.ProjectDir)
+
 			switch {
 			case shouldDisplayProjectDir:
 				cmd.Println(ctx.ProjectDir)
@@ -67,13 +69,13 @@ Use the flags below to display the paths to individual files or directories.
 			case shouldDisplayDocsDir:
 				cmd.Println(app.GetDocsDir(ctx.ProjectDir))
 			case shouldDisplaySrcDir:
-				cmd.Println(app.GetSrcDir(ctx.ProjectDir))
+				cmd.Println(srcDir)
 			case shouldDisplayPrototypeWorkspaceDir:
-				cmd.Println(app.GetPrototypeWorkspaceDir(ctx.ProjectDir))
+				cmd.Println(app.GetPrototypeWorkspaceDir(srcDir))
 			case shouldDisplayStudentWorkspaceDir:
 				studentWorkspaceDir, err := app.GetStudentWorkspaceDir(
 					ctx.OutputMode,
-					ctx.ProjectDir,
+					srcDir,
 				)
 				if err != nil {
 					return fmt.Errorf(

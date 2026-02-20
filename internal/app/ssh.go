@@ -62,34 +62,23 @@ func GenerateInstructorKeyPair(
 	); err != nil {
 		return err
 	} else if instructorPublicKeyFileExists {
-		return fmt.Errorf(
-			"instructor public key file exists at %q; "+
-				"delete it first to regenerate keys",
-			instructorPublicKeyFile,
-		)
-	}
-
-	if instructorPrivateKeyFileExists, err := filesystem.FileExists(
-		filepath.Join(dataDir, InstructorPrivateKeyFileName),
-	); err != nil {
-		return err
-	} else if instructorPrivateKeyFileExists {
-		if !force {
-			return fmt.Errorf(
-				"%s", "instructor private key file exists at %q"+
-					filepath.Join(dataDir, InstructorPrivateKeyFileName),
+		if force {
+			err := exec.ShellDeleteFile(
+				outputMode,
+				projectDir,
+				instructorPublicKeyFile,
 			)
-		}
-
-		err := exec.ShellDeleteFile(
-			outputMode,
-			projectDir,
-			filepath.Join(dataDir, InstructorPrivateKeyFileName),
-		)
-		if err != nil {
+			if err != nil {
+				return fmt.Errorf(
+					"delete existing instructor public key file: %w",
+					err,
+				)
+			}
+		} else {
 			return fmt.Errorf(
-				"delete existing instructor private key file: %w",
-				err,
+				"instructor public key file exists at %q; "+
+					"delete it first to regenerate keys",
+				instructorPublicKeyFile,
 			)
 		}
 	}
@@ -99,18 +88,29 @@ func GenerateInstructorKeyPair(
 		InstructorPrivateKeyFileName,
 	)
 
-	instructorPrivateKeyFileExists, err := filesystem.FileExists(
+	if instructorPrivateKeyFileExists, err := filesystem.FileExists(
 		instructorPrivateKeyFile,
-	)
-	if err != nil {
+	); err != nil {
 		return err
-	}
+	} else if instructorPrivateKeyFileExists {
+		if !force {
+			return fmt.Errorf(
+				"instructor private key file exists at %q",
+				instructorPrivateKeyFile,
+			)
+		}
 
-	if instructorPrivateKeyFileExists && !force {
-		return fmt.Errorf(
-			"instructor private key file already exists at %s",
+		err := exec.ShellDeleteFile(
+			outputMode,
+			projectDir,
 			instructorPrivateKeyFile,
 		)
+		if err != nil {
+			return fmt.Errorf(
+				"delete existing instructor private key file: %w",
+				err,
+			)
+		}
 	}
 
 	return GenerateKeyPair(outputMode, projectDir, instructorPrivateKeyFile)

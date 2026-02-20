@@ -83,13 +83,13 @@ func PrepareAssignment(
 		srcDir,
 		assignmentName,
 	)
-	proptotypeAssignmentDirExists, err := filesystem.DirExists(
+	prototypeAssignmentDirExists, err := filesystem.DirExists(
 		prototypeAssignmentDir,
 	)
 	if err != nil {
 		return fmt.Errorf("check prototype assignment directory: %w", err)
 	}
-	if !proptotypeAssignmentDirExists {
+	if !prototypeAssignmentDirExists {
 		return fmt.Errorf(
 			"prototype assignment directory %q does not exist",
 			prototypeAssignmentDir,

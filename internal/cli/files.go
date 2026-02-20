@@ -48,7 +48,7 @@ Use --student or --instructor to show the list for a specific role.
 				files = app.GetInstructorFiles(ctx.ProjectDir)
 				cmd.Printf("Instructor files:\n")
 			case model.RoleUnknown:
-				return fmt.Errorf("Unknown role")
+				return fmt.Errorf("unknown role")
 			}
 
 			for _, file := range files {

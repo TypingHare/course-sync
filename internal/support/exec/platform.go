@@ -47,6 +47,6 @@ func OpenFile(
 		args,
 		fmt.Sprintf("Opening documentation at %q...", relPath),
 		fmt.Sprintf("Opened documentation at %q.", relPath),
-		fmt.Sprintf("Failed to opened documentation at %q.", relPath),
+		fmt.Sprintf("Failed to open documentation at %q.", relPath),
 	).StartE()
 }

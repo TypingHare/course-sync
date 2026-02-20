@@ -92,6 +92,9 @@ func DistributeFileToStudentRepos(
 			srcAbsPath,
 			destAbsPath,
 		)
+		if err != nil {
+			return fmt.Errorf("copy file to %s: %w", destAbsPath, err)
+		}
 	}
 
 	return nil
@@ -140,6 +143,9 @@ func DistributeDirToStudentRepos(
 			srcAbsPath,
 			destAbsPath,
 		)
+		if err != nil {
+			return fmt.Errorf("copy dir to %s: %w", destAbsPath, err)
+		}
 	}
 
 	return nil

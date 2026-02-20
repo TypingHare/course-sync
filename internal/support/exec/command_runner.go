@@ -51,17 +51,19 @@ func NewCommandRunner(
 	errorMessage string,
 ) *CommandRunner {
 	var command string
+	var commandArgs []string
 	if len(args) == 0 {
 		command = ""
 	} else {
 		command = args[0]
+		commandArgs = args[1:]
 	}
 
 	return &CommandRunner{
 		workingDir:     "",
 		outputMode:     outputMode,
 		command:        command,
-		args:           args[1:],
+		args:           commandArgs,
 		ongoingMessage: ongoingMessage,
 		doneMessage:    doneMessage,
 		errorMessage:   errorMessage,

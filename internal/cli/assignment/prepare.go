@@ -27,7 +27,7 @@ You can view its path with:
 The user assignment directory is created under the user workspace, which can be
 viewed with:
     
-    csync path --user-workspace -q
+    csync path --student-workspace -q
 
 The assignment directory name matches the assignment name, which is provided as
 the first argument to this command.

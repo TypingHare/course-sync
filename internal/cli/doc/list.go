@@ -16,14 +16,11 @@ func listCmd(ctx *app.Context) *cobra.Command {
 		Use:   "list",
 		Short: "List all available documentation.",
 		Long: strings.TrimSpace(`
-List assignments available in the course.
+List documentation available in the course.
 
-This command reads assignment data from the assignments.json file in the
-application data directory and displays the results in a table, including each
-assignment’s name, title, release date, and due date.
-
-By default, only assignments that have not been submitted are shown. Use the
---all flag to include assignments that have already been submitted.
+This command reads documentation metadata from docs.json in the application data
+directory and displays the results in a table, including each document's name,
+title, version, release date, path, and whether it is the default document.
         `),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			docService := app.GetDocService(
