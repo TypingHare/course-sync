@@ -1,10 +1,13 @@
 EXECUTABLE := csync
 
-.PHONY: build
+.PHONY: build test clean
 
 build:
 	@mkdir -p bin
 	go build -o bin/$(EXECUTABLE) ./cmd/$(EXECUTABLE)/
+
+test:
+	GOCACHE=/tmp/go-build GOMODCACHE=/tmp/go-mod go test ./tests/...
 
 # Build for Windows amd64.
 build-windows-amd64:
