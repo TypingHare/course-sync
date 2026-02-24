@@ -55,3 +55,58 @@ func (s *DocService) GetDefaultDoc() (*model.Doc, error) {
 	}
 	return nil, nil
 }
+
+// AddDoc adds a new doc to the repository. If the new doc is marked as default,
+// the existing default doc will be unset.
+func (s *DocService) AddDoc(doc *model.Doc) error {
+	docs, err := s.repo.GetAll()
+	if err != nil {
+		return err
+	}
+	if docs == nil {
+		docs = []model.Doc{}
+	}
+
+	if doc.IsDefault {
+		for i := range docs {
+			docs[i].IsDefault = false
+		}
+	}
+
+	docs = append(docs, *doc)
+	return s.repo.SaveAll(docs)
+}
+
+// UpsertDoc adds a new doc or replaces an existing one with the same name.
+// If the incoming doc is marked as default, all other docs are unset.
+func (s *DocService) UpsertDoc(doc *model.Doc) error {
+	docs, err := s.repo.GetAll()
+	if err != nil {
+		return err
+	}
+	if docs == nil {
+		docs = []model.Doc{}
+	}
+
+	if doc.IsDefault {
+		for i := range docs {
+			docs[i].IsDefault = false
+		}
+	}
+
+	existingIndex := -1
+	for i := range docs {
+		if docs[i].Name == doc.Name {
+			existingIndex = i
+			break
+		}
+	}
+
+	if existingIndex >= 0 {
+		docs[existingIndex] = *doc
+	} else {
+		docs = append(docs, *doc)
+	}
+
+	return s.repo.SaveAll(docs)
+}

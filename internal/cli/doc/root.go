@@ -24,5 +24,9 @@ available documents and opening specific documents.
 	cmd.AddCommand(defaultCmd(ctx))
 	cmd.AddCommand(openCmd(ctx))
 
+	if ctx.IsInstructor() {
+		cmd.AddCommand(releaseCmd(ctx))
+	}
+
 	return cmd
 }

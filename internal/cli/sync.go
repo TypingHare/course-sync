@@ -40,6 +40,15 @@ func syncCmd(ctx *app.Context) *cobra.Command {
 				return fmt.Errorf("failed to commit local changes: %w", err)
 			}
 
+			if ctx.IsInstructor() {
+				err = app.Push(ctx.Role, ctx.OutputMode, dataDir)
+				if err != nil {
+					return fmt.Errorf("failed to push local commits: %w", err)
+				}
+
+				return nil
+			}
+
 			err = app.Pull(ctx.Role, ctx.OutputMode, dataDir)
 			if err != nil {
 				return fmt.Errorf("failed to pull remote changes: %w", err)

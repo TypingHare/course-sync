@@ -160,7 +160,7 @@ func PrepareAssignment(
 }
 
 // Assign registers a new assignment and distributes related files to student
-// repos.
+// repos (prototype directory).
 func Assign(
 	outputMode *io.OutputMode,
 	projectDir string,
@@ -169,6 +169,7 @@ func Assign(
 	assignmentDataFile := GetAssignmentDataFile(GetDataDir(projectDir))
 	assignmentService := GetAssignmentService(assignmentDataFile)
 
+	// Add the new assignment to the assignment data file.
 	err := assignmentService.AddAssignment(newAssignment)
 	if err != nil {
 		return fmt.Errorf("add assignment: %w", err)
@@ -225,8 +226,7 @@ func Assign(
 		)
 	}
 
-	// Distribute the prototype assignment directory to student
-	// repositories.
+	// Distribute the prototype assignment directory to students' repositories.
 	prototypeAssignmentDirRelPath, err := filepath.Rel(
 		projectDir,
 		prototypeAssignmentDir,

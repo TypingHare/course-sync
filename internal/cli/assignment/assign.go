@@ -16,6 +16,10 @@ func assignCmd(ctx *app.Context) *cobra.Command {
 		Short: "Assign an assignment",
 		Long: strings.TrimSpace(`
 Assign a new assignment.
+
+This command only creates the assignment and distribute files and directories to
+students' repositories. Instructors should use "sync" command to commit all the
+changes.
         `),
 		Args: cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -47,10 +51,6 @@ Assign a new assignment.
 			if err != nil {
 				return fmt.Errorf("failed to assign assignment: %w", err)
 			}
-
-			// Note: app.Assign doesn't commit all the changes, only create the
-			// assignment and distribute files and directories. Instructors
-			// should use "sync" command to commit all the changes.
 
 			return nil
 		},

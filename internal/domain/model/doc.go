@@ -20,7 +20,7 @@ type Doc struct {
 	Path string `json:"path"`
 
 	// UpdatedAt is the time the documentation was last updated.
-	UpdatedAt string `json:"updated_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 
 	// IsDefault reports whether this documentation is the default.
 	IsDefault bool `json:"is_default"`

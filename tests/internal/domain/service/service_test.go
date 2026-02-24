@@ -158,6 +158,36 @@ func TestDocServiceGetDefaultDoc(t *testing.T) {
 	}
 }
 
+func TestDocServiceUpsertDocReplacesExistingByName(t *testing.T) {
+	t.Parallel()
+
+	repo := &docRepoStub{
+		getAllResult: []model.Doc{
+			{Name: "guide", Title: "Guide v1", IsDefault: true},
+			{Name: "cheatsheet", Title: "Cheatsheet"},
+		},
+	}
+	svc := service.NewDocService(repo)
+
+	err := svc.UpsertDoc(&model.Doc{
+		Name:      "guide",
+		Title:     "Guide v2",
+		IsDefault: true,
+	})
+	if err != nil {
+		t.Fatalf("UpsertDoc returned error: %v", err)
+	}
+	if repo.saveAllCalls != 1 {
+		t.Fatalf("SaveAll call count = %d, want 1", repo.saveAllCalls)
+	}
+	if len(repo.saved) != 2 {
+		t.Fatalf("saved length = %d, want 2", len(repo.saved))
+	}
+	if repo.saved[0].Title != "Guide v2" {
+		t.Fatalf("saved title = %q, want %q", repo.saved[0].Title, "Guide v2")
+	}
+}
+
 func TestServicesPropagateRepoGetAllErrors(t *testing.T) {
 	t.Parallel()
 
@@ -247,12 +277,16 @@ func (s *gradeRepoStub) SaveAll([]model.Grade) error {
 type docRepoStub struct {
 	getAllResult []model.Doc
 	getAllErr    error
+	saved        []model.Doc
+	saveAllCalls int
 }
 
 func (s *docRepoStub) GetAll() ([]model.Doc, error) {
 	return s.getAllResult, s.getAllErr
 }
 
-func (s *docRepoStub) SaveAll([]model.Doc) error {
+func (s *docRepoStub) SaveAll(entities []model.Doc) error {
+	s.saved = append([]model.Doc(nil), entities...)
+	s.saveAllCalls++
 	return nil
 }
