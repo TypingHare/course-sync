@@ -1,7 +1,9 @@
 package app
 
 import (
+	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -14,16 +16,25 @@ const InstructorSyncCommitMessage = "feat: synchronize files (Course Sync)"
 
 // StudentCommit stages student files and commits them to the repository.
 func StudentCommit(outputMode *io.OutputMode, dataDir string) error {
-	studentFiles := GetStudentFiles(dataDir)
+	projectDir := filepath.Dir(dataDir)
+	studentFiles := GetStudentFiles(projectDir)
 
 	for _, file := range studentFiles {
+		if _, err := os.Stat(file); err != nil {
+			if errors.Is(err, os.ErrNotExist) {
+				continue
+			}
+
+			return fmt.Errorf("stat managed student file %q: %w", file, err)
+		}
+
 		err := exec.GitAdd(outputMode, file)
 		if err != nil {
 			return err
 		}
 	}
 
-	return exec.GitCommit(outputMode, "csync: update student files")
+	return gitCommitInDir(outputMode, projectDir, "csync: update student files")
 }
 
 func getStudentsForInstructorSync(dataDir string) ([]model.Student, error) {

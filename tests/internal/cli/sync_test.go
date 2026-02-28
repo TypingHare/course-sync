@@ -85,6 +85,125 @@ func TestSyncInstructorCommitsAndPushesStudentRepos(t *testing.T) {
 	}
 }
 
+func TestSyncStudentSucceedsWithoutSubmissionsFile(t *testing.T) {
+	projectDir := t.TempDir()
+	remoteDir := filepath.Join(projectDir, "remote.git")
+	repoDir := filepath.Join(projectDir, "student")
+
+	runCmd(t, "", "git", "init", "--bare", remoteDir)
+	runCmd(t, "", "git", "clone", remoteDir, repoDir)
+	runCmd(t, repoDir, "git", "config", "user.name", "Student")
+	runCmd(t, repoDir, "git", "config", "user.email", "student@example.com")
+
+	readmePath := filepath.Join(repoDir, "README.md")
+	if err := os.WriteFile(readmePath, []byte("hello\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile README failed: %v", err)
+	}
+	runCmd(t, repoDir, "git", "add", "README.md")
+	runCmd(t, repoDir, "git", "commit", "-m", "init")
+	runCmd(t, repoDir, "git", "push", "-u", "origin", "HEAD")
+
+	oldWD, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("Getwd failed: %v", err)
+	}
+	if err := os.Chdir(repoDir); err != nil {
+		t.Fatalf("Chdir failed: %v", err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(oldWD)
+	})
+
+	ctx := &app.Context{
+		OutputMode: io.NewOutputMode(false, true, true),
+		ProjectDir: repoDir,
+		WorkingDir: repoDir,
+		Role:       model.RoleStudent,
+	}
+
+	cmd := cli.Cmd(ctx)
+	cmd.SetArgs([]string{"sync"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("sync command returned error: %v", err)
+	}
+
+	if _, err := os.Stat(app.GetSubmissionDataFile(app.GetDataDir(repoDir))); !os.IsNotExist(err) {
+		t.Fatalf("submissions file should remain absent after sync, stat err = %v", err)
+	}
+}
+
+func TestSyncStudentStagesExistingSubmissionsFile(t *testing.T) {
+	projectDir := t.TempDir()
+	remoteDir := filepath.Join(projectDir, "remote.git")
+	repoDir := filepath.Join(projectDir, "student")
+
+	runCmd(t, "", "git", "init", "--bare", remoteDir)
+	runCmd(t, "", "git", "clone", remoteDir, repoDir)
+	runCmd(t, repoDir, "git", "config", "user.name", "Student")
+	runCmd(t, repoDir, "git", "config", "user.email", "student@example.com")
+
+	readmePath := filepath.Join(repoDir, "README.md")
+	if err := os.WriteFile(readmePath, []byte("hello\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile README failed: %v", err)
+	}
+	runCmd(t, repoDir, "git", "add", "README.md")
+	runCmd(t, repoDir, "git", "commit", "-m", "init")
+	runCmd(t, repoDir, "git", "push", "-u", "origin", "HEAD")
+
+	dataDir := app.GetDataDir(repoDir)
+	if err := os.MkdirAll(dataDir, 0o755); err != nil {
+		t.Fatalf("MkdirAll data dir failed: %v", err)
+	}
+
+	submissionsFile := app.GetSubmissionDataFile(dataDir)
+	if err := os.WriteFile(submissionsFile, []byte("[]\n"), 0o644); err != nil {
+		t.Fatalf("WriteFile submissions failed: %v", err)
+	}
+
+	oldWD, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("Getwd failed: %v", err)
+	}
+	if err := os.Chdir(repoDir); err != nil {
+		t.Fatalf("Chdir failed: %v", err)
+	}
+	t.Cleanup(func() {
+		_ = os.Chdir(oldWD)
+	})
+
+	ctx := &app.Context{
+		OutputMode: io.NewOutputMode(false, true, true),
+		ProjectDir: repoDir,
+		WorkingDir: repoDir,
+		Role:       model.RoleStudent,
+	}
+
+	cmd := cli.Cmd(ctx)
+	cmd.SetArgs([]string{"sync"})
+
+	if err := cmd.Execute(); err != nil {
+		t.Fatalf("sync command returned error: %v", err)
+	}
+
+	status := strings.TrimSpace(runCmd(t, repoDir, "git", "status", "--short"))
+	if status != "" {
+		t.Fatalf("git status after sync = %q, want clean working tree", status)
+	}
+
+	headSubject := strings.TrimSpace(runCmd(
+		t,
+		repoDir,
+		"git",
+		"log",
+		"-1",
+		"--pretty=%s",
+	))
+	if headSubject != "csync: update student files" {
+		t.Fatalf("head commit subject = %q, want %q", headSubject, "csync: update student files")
+	}
+}
+
 func setupRepoWithRemote(t *testing.T, repoDir string, remoteDir string) string {
 	t.Helper()
 
