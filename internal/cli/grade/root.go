@@ -22,6 +22,7 @@ viewing feedback for specific submissions.
 
 	cmd.AddCommand(listCmd(ctx))
 	cmd.AddCommand(showCmd(ctx))
+	cmd.AddCommand(assignCmd(ctx))
 
 	return cmd
 }
